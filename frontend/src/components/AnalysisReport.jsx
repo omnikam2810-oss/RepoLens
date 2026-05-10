@@ -1,0 +1,120 @@
+import { BookOpen, Gauge, Layers3, Lightbulb, ListChecks, Rocket, ShieldCheck } from 'lucide-react';
+
+const Section = ({ icon: Icon, title, children, id }) => (
+  <section
+    id={id}
+    className="surface-card card-glow scroll-mt-28 rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-[0_26px_60px_rgba(23,32,51,0.13)]"
+  >
+    <div className="mb-5 flex items-center gap-3">
+      <span className="grid h-10 w-10 place-items-center rounded-xl border border-violet-100 bg-violet-50 text-brand shadow-sm">
+        <Icon size={19} />
+      </span>
+      <h2 className="text-base font-extrabold text-ink">{title}</h2>
+    </div>
+    {children}
+  </section>
+);
+
+const BulletList = ({ items = [] }) => (
+  <ul className="space-y-2">
+    {items.map((item) => (
+      <li key={item} className="soft-panel rounded-xl px-4 py-3 text-sm leading-6 text-slate-600 transition hover:border-violet-200 hover:bg-white">
+        {item}
+      </li>
+    ))}
+  </ul>
+);
+
+const toBulletItems = (value) => {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value || typeof value !== 'string') return [];
+
+  return value
+    .split(/\n+|(?<=[.!?])\s+(?=[A-Z0-9])/)
+    .map((item) => item.replace(/^[-*\u2022\d.]+\s*/, '').trim())
+    .filter(Boolean);
+};
+
+const AnalysisReport = ({ result }) => {
+  const analysis = result.analysis;
+
+  return (
+    <div className="space-y-6">
+      <Section id="project-summary" icon={BookOpen} title="Project Summary">
+        <div className="space-y-4">
+          <p className="text-lg font-semibold leading-8 text-ink">{analysis.projectSummary}</p>
+          <p className="leading-7 text-slate-600">{analysis.projectPurpose}</p>
+          <div className="inline-flex rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+            {analysis.projectType}
+          </div>
+        </div>
+      </Section>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Section id="architecture-overview" icon={Layers3} title="Architecture Overview">
+          <BulletList items={toBulletItems(analysis.architectureOverview)} />
+        </Section>
+        <Section id="setup-instructions" icon={Rocket} title="Setup Instructions">
+          <BulletList items={analysis.setupInstructions || []} />
+        </Section>
+      </div>
+
+      <Section id="feature-breakdown" icon={ListChecks} title="Feature Breakdown">
+        <BulletList items={analysis.features || []} />
+      </Section>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Section id="folder-explanation" icon={BookOpen} title="Folder Explanation">
+          <div className="space-y-3">
+            {(analysis.folderExplanation || []).map((folder) => (
+              <div key={folder.path} className="rounded-xl border border-line bg-slate-50/70 p-4 transition hover:border-violet-200 hover:bg-white hover:shadow-sm">
+                <p className="text-sm font-extrabold text-ink">{folder.path}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">{folder.explanation}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+        <Section id="important-files" icon={Lightbulb} title="Important Files">
+          <div className="space-y-3">
+            {(analysis.importantFiles || []).map((file) => (
+              <div key={file.path} className="rounded-xl border border-line bg-slate-50/70 p-4 transition hover:border-violet-200 hover:bg-white hover:shadow-sm">
+                <p className="text-sm font-extrabold text-ink">{file.path}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">{file.explanation}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Section id="suggestions" icon={Lightbulb} title="Suggestions">
+          <BulletList items={analysis.suggestions || []} />
+        </Section>
+        <Section id="security-suggestions" icon={ShieldCheck} title="Security Suggestions">
+          <BulletList items={analysis.securitySuggestions || []} />
+        </Section>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Section id="quality-score" icon={Gauge} title="Quality Score">
+          <div className="flex items-center gap-5">
+            <div className="grid h-24 w-24 shrink-0 place-items-center rounded-full border-8 border-violet-100 bg-white shadow-inner">
+              <span className="text-2xl font-extrabold text-ink">{analysis.codeQualityScore?.score ?? 0}</span>
+            </div>
+            <div>
+              <p className="text-sm font-extrabold text-slate-500">Repository health score</p>
+              <div className="mt-3">
+                <BulletList items={toBulletItems(analysis.codeQualityScore?.rationale || 'Run an analysis to generate scoring.')} />
+              </div>
+            </div>
+          </div>
+        </Section>
+        <Section id="beginner-mode" icon={BookOpen} title="Beginner Mode">
+          <BulletList items={toBulletItems(analysis.beginnerExplanation)} />
+        </Section>
+      </div>
+    </div>
+  );
+};
+
+export default AnalysisReport;

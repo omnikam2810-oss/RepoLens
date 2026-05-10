@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    linear-gradient(rgba(221, 229, 240, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(221, 229, 240, 0.45) 1px, transparent 1px),
+    #f7f9fc;
+  background-size: 36px 36px;
+  color: #172033;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #b9c6d8 transparent;
+}
+
+.surface-card {
+  border: 1px solid rgba(221, 229, 240, 0.95);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.94));
+  box-shadow:
+    0 18px 45px rgba(23, 32, 51, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+}
+
+.soft-panel {
+  border: 1px solid rgba(221, 229, 240, 0.95);
+  background:
+    linear-gradient(180deg, #ffffff, #f8fafc);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f3e8ff, #d8b4fe, #99f6e4);
+  opacity: 0.85;
+}
+
+.card-glow > * {
+  position: relative;
+}

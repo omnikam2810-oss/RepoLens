@@ -80,13 +80,55 @@ const parseGeminiJsonResponse = (content) => {
   }
 };
 
+const getGeminiFriendlyMessage = (message) => {
+  const normalizedMessage = message.toLowerCase();
+
+  if (normalizedMessage.includes('quota') || normalizedMessage.includes('rate limit') || message.includes('429')) {
+    return 'Gemini quota or rate limit was reached. Wait a bit or check your Google AI Studio quota.';
+  }
+
+  if (
+    normalizedMessage.includes('api key not valid') ||
+    normalizedMessage.includes('invalid api key') ||
+    normalizedMessage.includes('permission') ||
+    message.includes('403')
+  ) {
+    return 'Gemini rejected the API key. Check GEMINI_API_KEY in backend/.env.';
+  }
+
+  if (
+    normalizedMessage.includes('not found') ||
+    normalizedMessage.includes('not supported') ||
+    message.includes('404')
+  ) {
+    return `Model "${env.geminiModel}" is not available for this API key or API version. Run "npm run test:gemini" to verify available models.`;
+  }
+
+  if (
+    normalizedMessage.includes('overloaded') ||
+    normalizedMessage.includes('unavailable') ||
+    normalizedMessage.includes('timeout') ||
+    message.includes('503')
+  ) {
+    return 'Gemini is temporarily unavailable or overloaded. Try again shortly.';
+  }
+
+  if (
+    normalizedMessage.includes('too large') ||
+    normalizedMessage.includes('token') ||
+    normalizedMessage.includes('payload')
+  ) {
+    return 'The repository prompt was too large for Gemini. Try a smaller repository or reduce fetched files.';
+  }
+
+  return 'Gemini returned an unexpected provider error.';
+};
+
 const buildGeminiError = (error) => {
   const message = error.message || 'Unknown Gemini API error.';
-  const modelHint = message.includes('not found') || message.includes('not supported')
-    ? ` Model "${env.geminiModel}" is not available for this API key or API version. Run "npm run test:gemini" to verify available models.`
-    : '';
+  const friendlyMessage = getGeminiFriendlyMessage(message);
 
-  return new AppError(`Gemini API request failed.${modelHint}`, 502, message);
+  return new AppError(`Gemini API request failed. ${friendlyMessage}`, 502, message);
 };
 
 export const generateRepositoryAnalysis = async (payload, messages) => {

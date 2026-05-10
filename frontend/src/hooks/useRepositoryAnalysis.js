@@ -1,6 +1,18 @@
 import { useState } from 'react';
 import { analyzeRepositoryRequest } from '../services/analysisService';
 
+const formatRequestError = (requestError) => {
+  const fallbackMessage = 'RepoLens could not analyze this repository. Check the URL and try again.';
+  const responseData = requestError.response?.data;
+  const message = responseData?.message || fallbackMessage;
+  const details = typeof responseData?.details === 'string' ? responseData.details.trim() : '';
+
+  if (!details) return message;
+
+  const compactDetails = details.replace(/\s+/g, ' ').slice(0, 280);
+  return `${message} Details: ${compactDetails}`;
+};
+
 export const useRepositoryAnalysis = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -12,10 +24,7 @@ export const useRepositoryAnalysis = () => {
     try {
       return await analyzeRepositoryRequest({ repositoryUrl, mode });
     } catch (requestError) {
-      const message =
-        requestError.response?.data?.message ||
-        'RepoLens could not analyze this repository. Check the URL and try again.';
-      setError(message);
+      setError(formatRequestError(requestError));
       return null;
     } finally {
       setIsLoading(false);

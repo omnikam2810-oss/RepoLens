@@ -12,10 +12,12 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    linear-gradient(rgba(221, 229, 240, 0.55) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(221, 229, 240, 0.45) 1px, transparent 1px),
-    #f7f9fc;
-  background-size: 36px 36px;
+    radial-gradient(circle at 12% 0%, rgba(14, 165, 233, 0.12), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(192, 132, 252, 0.16), transparent 24rem),
+    linear-gradient(rgba(221, 229, 240, 0.38) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(221, 229, 240, 0.32) 1px, transparent 1px),
+    #f8fafc;
+  background-size: auto, auto, 36px 36px, 36px 36px, auto;
   color: #172033;
 }
 
@@ -62,4 +64,29 @@ input {
 
 .card-glow > * {
   position: relative;
+}
+
+.landing-page {
+  max-width: 100%;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(rgba(148, 163, 184, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 82%);
+}
+
+.hero-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(192, 132, 252, 0.16), transparent 24rem),
+    radial-gradient(circle at 78% 10%, rgba(45, 212, 191, 0.14), transparent 26rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.98));
 }

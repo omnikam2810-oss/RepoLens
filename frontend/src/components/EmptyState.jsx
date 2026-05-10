@@ -1,4 +1,24 @@
-import { ArrowRight, FileSearch, ShieldCheck, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  ArrowRight,
+  Boxes,
+  CheckCircle2,
+  ChevronRight,
+  Code2,
+  FileSearch,
+  Github,
+  Layers3,
+  Loader2,
+  LockKeyhole,
+  Network,
+  Rocket,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  TerminalSquare,
+  Zap,
+} from 'lucide-react';
 
 const examples = [
   'https://github.com/facebook/react',
@@ -6,59 +26,377 @@ const examples = [
   'https://github.com/nodejs/node',
 ];
 
-const EmptyState = ({ onExampleSelect }) => (
-  <section className="surface-card overflow-hidden rounded-xl">
-    <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[minmax(0,1.05fr)_420px] xl:p-10">
-      <div>
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-brand shadow-sm">
-          <Sparkles size={14} />
-          Enterprise repository analysis
-        </div>
-        <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-normal text-ink md:text-5xl xl:text-6xl">
-          Understand any public GitHub repository in minutes.
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 md:text-lg md:leading-8">
-          RepoLens reads structure, documentation, dependencies, and source files to produce a clear technical report for developers, students, recruiters, and engineering teams.
-        </p>
-        <div className="mt-7 grid gap-3 sm:grid-cols-3">
-          {[
-            ['Architecture', 'Folder and flow insights'],
-            ['Setup', 'Install and run steps'],
-            ['Quality', 'Suggestions and scoring'],
-          ].map(([title, description]) => (
-            <div key={title} className="rounded-xl border border-line bg-slate-50/80 p-4 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white">
-              <p className="font-bold text-ink">{title}</p>
-              <p className="mt-1 text-sm text-slate-500">{description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+const trustStats = [
+  ['240+', 'repository nodes mapped'],
+  ['18', 'key files inspected'],
+  ['3', 'analysis modes'],
+  ['JSON', 'structured AI output'],
+];
 
-      <div className="min-w-0 rounded-xl border border-line bg-slate-50/80 p-5 shadow-inner">
-        <div className="flex items-center gap-2 text-sm font-bold text-ink">
-          <FileSearch size={18} />
-          Try a repository
-        </div>
-        <div className="mt-4 space-y-3">
-          {examples.map((example) => (
-            <button
-              key={example}
-              type="button"
-              onClick={() => onExampleSelect(example)}
-              className="flex w-full items-center justify-between rounded-xl border border-line bg-white px-4 py-3 text-left text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-brand hover:text-brand hover:shadow-sm"
+const featureCards = [
+  {
+    icon: Layers3,
+    title: 'Architecture intelligence',
+    description: 'Map folders, entry points, services, components, and system flow into a readable technical narrative.',
+  },
+  {
+    icon: Rocket,
+    title: 'Setup clarity',
+    description: 'Extract install steps, runtime requirements, manifests, and practical onboarding guidance from the repository.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Quality review',
+    description: 'Surface maintainability signals, security suggestions, dependency notes, and a concise health score.',
+  },
+  {
+    icon: Network,
+    title: 'Project structure',
+    description: 'Explore a focused repository tree with important files and directories grouped for fast inspection.',
+  },
+];
+
+const workflowSteps = [
+  ['01', 'Paste a public repository', 'RepoLens validates the GitHub URL and prepares the analysis mode.'],
+  ['02', 'Build a repository snapshot', 'The backend fetches metadata, directory structure, and high-signal files.'],
+  ['03', 'Generate structured insight', 'Gemini returns a typed report for developers, recruiters, and teams.'],
+];
+
+const showcaseCards = [
+  ['Architecture', 'Routing, services, modules, and data flow summarized for quick review.', Layers3],
+  ['Dependencies', 'Package manifests and framework signals converted into practical insight.', Boxes],
+  ['Recruiter view', 'Project value, purpose, and technical scope explained without noise.', Star],
+];
+
+const metrics = [
+  ['92', 'Readability score'],
+  ['14', 'Important files'],
+  ['38', 'Folders scanned'],
+  ['7', 'Actionable suggestions'],
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const SectionHeader = ({ eyebrow, title, description }) => (
+  <div className="mx-auto max-w-3xl text-center">
+    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand">{eyebrow}</p>
+    <h2 className="mt-3 text-3xl font-extrabold leading-tight text-ink md:text-4xl">{title}</h2>
+    <p className="mt-4 text-base leading-7 text-slate-600">{description}</p>
+  </div>
+);
+
+const EmptyState = ({
+  repositoryUrl,
+  onRepositoryUrlChange,
+  onAnalyze,
+  isLoading,
+  mode,
+  onModeChange,
+  onExampleSelect,
+}) => (
+  <div id="top" className="landing-page overflow-hidden">
+    <section className="relative isolate min-h-[calc(100vh-7.5rem)] rounded-[28px] border border-white/80 bg-white/88 px-5 py-8 shadow-[0_28px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:px-8 lg:px-10 lg:py-12">
+      <div className="hero-grid" />
+      <div className="hero-sheen" />
+
+      <div className="relative grid gap-10 xl:grid-cols-[minmax(0,1.02fr)_520px] xl:items-center">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.45 }}>
+          <div className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-white px-3 py-1.5 text-xs font-extrabold text-brand shadow-[0_10px_28px_rgba(124,58,237,0.10)]">
+            <Sparkles size={14} />
+            Enterprise repository intelligence
+          </div>
+
+          <h1 className="mt-7 max-w-5xl text-5xl font-extrabold leading-[0.98] text-ink md:text-7xl xl:text-[82px]">
+            Turn any GitHub repository into an executive-ready technical brief.
+          </h1>
+
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 md:text-xl md:leading-9">
+            RepoLens analyzes structure, documentation, dependencies, and source files to deliver clear architecture,
+            setup, quality, and hiring-ready insights in one polished report.
+          </p>
+
+          <form
+            onSubmit={onAnalyze}
+            className="mt-9 max-w-4xl rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-[0_24px_60px_rgba(15,23,42,0.12)]"
+          >
+            <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_150px_190px]">
+              <label className="relative block">
+                <Github className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={21} />
+                <input
+                  value={repositoryUrl}
+                  onChange={(event) => onRepositoryUrlChange(event.target.value)}
+                  placeholder="https://github.com/facebook/react"
+                  className="h-14 w-full rounded-xl border border-transparent bg-slate-50 pl-12 pr-4 text-base font-semibold text-ink outline-none transition placeholder:text-slate-400 hover:bg-white focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(192,132,252,0.16)]"
+                />
+              </label>
+
+              <select
+                value={mode}
+                onChange={(event) => onModeChange(event.target.value)}
+                className="h-14 rounded-xl border border-transparent bg-slate-50 px-4 text-sm font-bold text-slate-700 outline-none transition hover:bg-white focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(192,132,252,0.16)]"
+              >
+                <option value="standard">Standard</option>
+                <option value="beginner">Beginner</option>
+                <option value="recruiter">Recruiter</option>
+              </select>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-extrabold text-white shadow-[0_18px_44px_rgba(15,23,42,0.22)] transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isLoading ? <Loader2 className="animate-spin" size={18} /> : <Search size={18} />}
+                Analyze Repository
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+            <span className="font-semibold text-slate-500">Try:</span>
+            {examples.map((example) => (
+              <button
+                key={example}
+                type="button"
+                onClick={() => onExampleSelect(example)}
+                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-600 transition hover:-translate-y-0.5 hover:border-brand hover:text-brand hover:shadow-sm"
+              >
+                {example.replace('https://github.com/', '')}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="#features"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-extrabold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
             >
-              <span className="min-w-0 truncate">{example}</span>
-              <ArrowRight size={16} />
-            </button>
-          ))}
+              Explore Features
+              <ChevronRight size={17} />
+            </a>
+            <a
+              href="#showcase"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-transparent px-5 text-sm font-extrabold text-slate-600 transition hover:bg-white hover:text-ink"
+            >
+              View Demo
+              <ArrowRight size={17} />
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 18, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.55, delay: 0.08 }}
+          className="relative"
+        >
+          <div className="absolute -inset-8 rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.18),transparent_32%)] blur-2xl" />
+          <div className="relative rounded-2xl border border-slate-200 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.14)]">
+            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-rose-400" />
+                <span className="h-3 w-3 rounded-full bg-amber-300" />
+                <span className="h-3 w-3 rounded-full bg-emerald-400" />
+              </div>
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">analysis.preview</div>
+            </div>
+            <div className="space-y-4 p-5">
+              <div className="rounded-xl border border-slate-200 bg-slate-950 p-4 text-slate-100 shadow-inner">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-300">
+                  <TerminalSquare size={15} />
+                  Repository graph generated
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {['src', 'api', 'components', 'routes', 'models', 'docs'].map((item) => (
+                    <div key={item} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {showcaseCards.slice(0, 2).map(([title, description, Icon]) => (
+                  <div key={title} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <Icon className="text-brand" size={18} />
+                    <p className="mt-3 text-sm font-extrabold text-ink">{title}</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-extrabold text-emerald-900">Quality score</p>
+                  <span className="text-2xl font-extrabold text-emerald-700">92</span>
+                </div>
+                <div className="mt-3 h-2 rounded-full bg-emerald-100">
+                  <div className="h-2 w-[92%] rounded-full bg-emerald-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+
+    <section className="py-12">
+      <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white/82 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.07)] backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
+        {trustStats.map(([value, label]) => (
+          <div key={label} className="rounded-xl bg-slate-50 px-5 py-4">
+            <p className="text-2xl font-extrabold text-ink">{value}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-500">{label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="features" className="scroll-mt-28 py-10">
+      <SectionHeader
+        eyebrow="Repository intelligence"
+        title="Everything an engineering team needs to understand a codebase faster."
+        description="Feature cards are tuned for real repository analysis, from architecture and setup to quality signals and project structure."
+      />
+      <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {featureCards.map(({ icon: Icon, title, description }) => (
+          <div
+            key={title}
+            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-[0_28px_70px_rgba(15,23,42,0.11)]"
+          >
+            <div className="grid h-11 w-11 place-items-center rounded-xl bg-slate-950 text-white shadow-lg transition group-hover:scale-105 group-hover:bg-brand">
+              <Icon size={20} />
+            </div>
+            <h3 className="mt-5 text-lg font-extrabold text-ink">{title}</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section className="py-12">
+      <SectionHeader
+        eyebrow="Workflow"
+        title="From repository URL to boardroom-ready analysis."
+        description="The existing backend workflow stays intact while the experience now communicates the product value clearly."
+      />
+      <div className="mt-10 grid gap-5 lg:grid-cols-3">
+        {workflowSteps.map(([step, title, description]) => (
+          <div key={step} className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
+            <span className="text-sm font-extrabold text-brand">{step}</span>
+            <h3 className="mt-4 text-xl font-extrabold text-ink">{title}</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="showcase" className="scroll-mt-28 py-12">
+      <div className="grid gap-6 rounded-[28px] border border-slate-200 bg-slate-950 p-5 text-white shadow-[0_30px_90px_rgba(15,23,42,0.18)] lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+        <div className="flex flex-col justify-between gap-10">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-300">Product showcase</p>
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">A polished analysis workspace for serious code review.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-300">
+              RepoLens turns raw repository data into a clean dashboard that is easy to scan, export, and share.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {showcaseCards.map(([title, description, Icon]) => (
+              <div key={title} className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
+                <Icon className="text-cyan-300" size={18} />
+                <p className="mt-3 text-sm font-extrabold">{title}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-300">{description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-900">
-          <ShieldCheck className="mt-0.5 shrink-0" size={18} />
-          <p>Public repositories work immediately. Add a GitHub token on the backend for higher rate limits.</p>
+
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {metrics.map(([value, label]) => (
+              <div key={label} className="rounded-xl border border-white/10 bg-white/[0.06] p-5">
+                <p className="text-4xl font-extrabold">{value}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-300">{label}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 rounded-xl border border-white/10 bg-slate-900 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-extrabold">Insight pipeline</p>
+                <p className="mt-1 text-xs text-slate-400">GitHub API, repository filters, Gemini JSON report</p>
+              </div>
+              <Zap className="text-amber-300" size={20} />
+            </div>
+            <div className="mt-5 space-y-3">
+              {['Fetch metadata', 'Rank important files', 'Generate report'].map((item, index) => (
+                <div key={item} className="flex items-center gap-3">
+                  <CheckCircle2 className="text-emerald-300" size={18} />
+                  <div className="h-2 flex-1 rounded-full bg-white/10">
+                    <div className="h-2 rounded-full bg-cyan-300" style={{ width: `${82 + index * 6}%` }} />
+                  </div>
+                  <span className="w-36 text-xs font-semibold text-slate-300">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <section className="py-12">
+      <div className="rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-[0_24px_70px_rgba(15,23,42,0.09)]">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-ink text-white shadow-lg">
+          <FileSearch size={22} />
+        </div>
+        <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold leading-tight text-ink md:text-4xl">
+          Analyze your next repository with confidence.
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
+          Built for developers, students, recruiters, and engineering teams who need technical clarity quickly.
+        </p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <a
+            href="#top"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-extrabold text-white shadow-[0_18px_44px_rgba(15,23,42,0.20)] transition hover:-translate-y-0.5 hover:bg-slate-800"
+          >
+            Analyze Repository
+            <ArrowRight size={17} />
+          </a>
+          <button
+            type="button"
+            onClick={() => onExampleSelect(examples[0])}
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+          >
+            Load Demo Repository
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer className="border-t border-slate-200 py-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-ink text-white">
+            <Code2 size={20} />
+          </div>
+          <div>
+            <p className="font-extrabold text-ink">RepoLens</p>
+            <p className="text-sm font-medium text-slate-500">AI repository intelligence</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-4 text-sm font-bold text-slate-500">
+          <a href="#features" className="transition hover:text-ink">Features</a>
+          <a href="#showcase" className="transition hover:text-ink">Showcase</a>
+          <a href="https://github.com" className="transition hover:text-ink">GitHub</a>
+          <span className="inline-flex items-center gap-1 text-emerald-700">
+            <LockKeyhole size={14} />
+            Public repositories only
+          </span>
+        </div>
+      </div>
+    </footer>
+  </div>
 );
 
 export default EmptyState;

@@ -65,7 +65,15 @@ const AnalyzerPage = () => {
             {error}
           </div>
         )}
-        <EmptyState onExampleSelect={handleExampleSelect} />
+        <EmptyState
+          repositoryUrl={repositoryUrl}
+          onRepositoryUrlChange={setRepositoryUrl}
+          onAnalyze={handleAnalyze}
+          isLoading={isLoading}
+          mode={mode}
+          onModeChange={setMode}
+          onExampleSelect={handleExampleSelect}
+        />
       </AppShell>
     );
   }
@@ -87,7 +95,15 @@ const AnalyzerPage = () => {
       ) : analysisResult ? (
         <AnalysisReport result={analysisResult} />
       ) : (
-        <EmptyState onExampleSelect={handleExampleSelect} />
+        <EmptyState
+          repositoryUrl={repositoryUrl}
+          onRepositoryUrlChange={setRepositoryUrl}
+          onAnalyze={handleAnalyze}
+          isLoading={isLoading}
+          mode={mode}
+          onModeChange={setMode}
+          onExampleSelect={handleExampleSelect}
+        />
       )}
     </AppShell>
   );

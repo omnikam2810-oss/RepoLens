@@ -82,7 +82,7 @@ const AnalyzerPage = () => {
     <AppShell
       navbar={navbar}
       leftSidebar={<SidebarTree tree={analysisResult?.tree} importantFiles={analysisResult?.importantFiles} result={analysisResult} />}
-      rightSidebar={<RightInsights result={analysisResult} />}
+      rightSidebar={<RightInsights result={analysisResult} onNavigateStructure={() => setCurrentView('structure')} />}
     >
       {error && (
         <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">

@@ -1,4 +1,5 @@
-import { BrainCircuit, GitBranch, Github, LayoutDashboard, Loader2, Search } from 'lucide-react';
+import { BrainCircuit, GitBranch, Github, LayoutDashboard, Loader2, Moon, Search, Sun } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = ({
   repositoryUrl,
@@ -10,7 +11,11 @@ const Navbar = ({
   currentView,
   onNavigate,
   hasAnalysis,
-}) => (
+}) => {
+  const { isDark, toggleTheme } = useTheme();
+  const ThemeIcon = isDark ? Sun : Moon;
+
+  return (
   <header className="sticky top-0 z-20 border-b border-white/70 bg-white/78 shadow-[0_16px_44px_rgba(15,23,42,0.08)] backdrop-blur-2xl">
     <div className="mx-auto flex max-w-[1540px] flex-col gap-3 px-4 py-3.5 lg:flex-row lg:items-center lg:px-6">
       <button type="button" onClick={() => onNavigate('dashboard')} className="flex items-center gap-3 text-left">
@@ -80,8 +85,22 @@ const Navbar = ({
           </button>
         </form>
       )}
+
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+        title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+        className="theme-toggle inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-200 bg-white/95 px-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:ml-auto lg:w-auto lg:min-w-32"
+      >
+        <span>{isDark ? 'Light' : 'Dark'}</span>
+        <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-100 text-brand">
+          <ThemeIcon size={16} />
+        </span>
+      </button>
     </div>
   </header>
-);
+  );
+};
 
 export default Navbar;

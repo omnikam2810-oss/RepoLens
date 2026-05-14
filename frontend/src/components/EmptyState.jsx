@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Boxes,
-  CheckCircle2,
   ChevronRight,
   Code2,
   FileSearch,
@@ -16,21 +15,13 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
-  TerminalSquare,
-  Zap,
 } from 'lucide-react';
+import projectTreePreview from '../assets/project-tree-preview.png';
 
 const examples = [
   'https://github.com/facebook/react',
   'https://github.com/vercel/next.js',
   'https://github.com/nodejs/node',
-];
-
-const trustStats = [
-  ['240+', 'repository nodes mapped'],
-  ['18', 'key files inspected'],
-  ['3', 'analysis modes'],
-  ['JSON', 'structured AI output'],
 ];
 
 const featureCards = [
@@ -102,11 +93,11 @@ const EmptyState = ({
       <div className="hero-grid" />
       <div className="hero-sheen" />
 
-      <div className="relative grid gap-10 xl:grid-cols-[minmax(0,1.02fr)_520px] xl:items-center">
+      <div className="relative">
         <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.45 }}>
           <div className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-white px-3 py-1.5 text-xs font-extrabold text-brand shadow-[0_10px_28px_rgba(124,58,237,0.10)]">
             <Sparkles size={14} />
-            Enterprise repository intelligence
+            AI repository intelligence
           </div>
 
           <h1 className="mt-7 max-w-5xl text-5xl font-extrabold leading-[0.98] text-ink md:text-7xl xl:text-[82px]">
@@ -185,69 +176,6 @@ const EmptyState = ({
             </a>
           </div>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.55, delay: 0.08 }}
-          className="relative"
-        >
-          <div className="absolute -inset-8 rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.18),transparent_32%)] blur-2xl" />
-          <div className="relative rounded-2xl border border-slate-200 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.14)]">
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-rose-400" />
-                <span className="h-3 w-3 rounded-full bg-amber-300" />
-                <span className="h-3 w-3 rounded-full bg-emerald-400" />
-              </div>
-              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">analysis.preview</div>
-            </div>
-            <div className="space-y-4 p-5">
-              <div className="rounded-xl border border-slate-200 bg-slate-950 p-4 text-slate-100 shadow-inner">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-300">
-                  <TerminalSquare size={15} />
-                  Repository graph generated
-                </div>
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  {['src', 'api', 'components', 'routes', 'models', 'docs'].map((item) => (
-                    <div key={item} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold">
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {showcaseCards.slice(0, 2).map(([title, description, Icon]) => (
-                  <div key={title} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <Icon className="text-brand" size={18} />
-                    <p className="mt-3 text-sm font-extrabold text-ink">{title}</p>
-                    <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-extrabold text-emerald-900">Quality score</p>
-                  <span className="text-2xl font-extrabold text-emerald-700">92</span>
-                </div>
-                <div className="mt-3 h-2 rounded-full bg-emerald-100">
-                  <div className="h-2 w-[92%] rounded-full bg-emerald-500" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-
-    <section className="py-12">
-      <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white/82 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.07)] backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
-        {trustStats.map(([value, label]) => (
-          <div key={label} className="rounded-xl bg-slate-50 px-5 py-4">
-            <p className="text-2xl font-extrabold text-ink">{value}</p>
-            <p className="mt-1 text-sm font-semibold text-slate-500">{label}</p>
-          </div>
-        ))}
       </div>
     </section>
 
@@ -291,54 +219,41 @@ const EmptyState = ({
     </section>
 
     <section id="showcase" className="scroll-mt-28 py-12">
-      <div className="grid gap-6 rounded-[28px] border border-slate-200 bg-slate-950 p-5 text-white shadow-[0_30px_90px_rgba(15,23,42,0.18)] lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+      <div className="showcase-panel grid gap-6 rounded-[28px] p-5 lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
         <div className="flex flex-col justify-between gap-10">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-300">Product showcase</p>
+            <p className="showcase-eyebrow text-xs font-extrabold uppercase tracking-[0.18em]">Product showcase</p>
             <h2 className="mt-4 text-3xl font-extrabold leading-tight md:text-4xl">A polished analysis workspace for serious code review.</h2>
-            <p className="mt-4 text-base leading-7 text-slate-300">
+            <p className="showcase-copy mt-4 text-base leading-7">
               RepoLens turns raw repository data into a clean dashboard that is easy to scan, export, and share.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {showcaseCards.map(([title, description, Icon]) => (
-              <div key={title} className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
-                <Icon className="text-cyan-300" size={18} />
+              <div key={title} className="showcase-card rounded-xl p-4">
+                <Icon className="showcase-icon" size={18} />
                 <p className="mt-3 text-sm font-extrabold">{title}</p>
-                <p className="mt-1 text-xs leading-5 text-slate-300">{description}</p>
+                <p className="showcase-copy mt-1 text-xs leading-5">{description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <div className="showcase-media rounded-2xl p-4">
           <div className="grid gap-4 md:grid-cols-2">
             {metrics.map(([value, label]) => (
-              <div key={label} className="rounded-xl border border-white/10 bg-white/[0.06] p-5">
+              <div key={label} className="showcase-card rounded-xl p-5">
                 <p className="text-4xl font-extrabold">{value}</p>
-                <p className="mt-2 text-sm font-semibold text-slate-300">{label}</p>
+                <p className="showcase-copy mt-2 text-sm font-semibold">{label}</p>
               </div>
             ))}
           </div>
-          <div className="mt-4 rounded-xl border border-white/10 bg-slate-900 p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-extrabold">Insight pipeline</p>
-                <p className="mt-1 text-xs text-slate-400">GitHub API, repository filters, Gemini JSON report</p>
-              </div>
-              <Zap className="text-amber-300" size={20} />
-            </div>
-            <div className="mt-5 space-y-3">
-              {['Fetch metadata', 'Rank important files', 'Generate report'].map((item, index) => (
-                <div key={item} className="flex items-center gap-3">
-                  <CheckCircle2 className="text-emerald-300" size={18} />
-                  <div className="h-2 flex-1 rounded-full bg-white/10">
-                    <div className="h-2 rounded-full bg-cyan-300" style={{ width: `${82 + index * 6}%` }} />
-                  </div>
-                  <span className="w-36 text-xs font-semibold text-slate-300">{item}</span>
-                </div>
-              ))}
-            </div>
+          <div className="showcase-tree-preview mt-4 overflow-hidden rounded-xl">
+            <img
+              src={projectTreePreview}
+              alt="RepoLens project structure tree preview"
+              className="h-auto max-h-[320px] w-full object-contain object-center"
+            />
           </div>
         </div>
       </div>
@@ -363,13 +278,6 @@ const EmptyState = ({
             Analyze Repository
             <ArrowRight size={17} />
           </a>
-          <button
-            type="button"
-            onClick={() => onExampleSelect(examples[0])}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
-          >
-            Load Demo Repository
-          </button>
         </div>
       </div>
     </section>
@@ -388,7 +296,6 @@ const EmptyState = ({
         <div className="flex flex-wrap gap-4 text-sm font-bold text-slate-500">
           <a href="#features" className="transition hover:text-ink">Features</a>
           <a href="#showcase" className="transition hover:text-ink">Showcase</a>
-          <a href="https://github.com" className="transition hover:text-ink">GitHub</a>
           <span className="inline-flex items-center gap-1 text-emerald-700">
             <LockKeyhole size={14} />
             Public repositories only

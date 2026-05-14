@@ -1,6 +1,6 @@
-import { Activity, Boxes, GitFork, Star } from 'lucide-react';
+import { Activity, Boxes, GitFork, ListTree, Star } from 'lucide-react';
 
-const RightInsights = ({ result }) => {
+const RightInsights = ({ result, onNavigateStructure }) => {
   const repository = result?.repository;
   const analysis = result?.analysis;
 
@@ -41,6 +41,21 @@ const RightInsights = ({ result }) => {
           {!result && <span className="text-sm text-slate-400">No analysis yet.</span>}
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={onNavigateStructure}
+        disabled={!result}
+        className="flex w-full items-center justify-between rounded-2xl border border-line bg-white p-5 text-left shadow-[0_18px_44px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-brand hover:shadow-[0_22px_52px_rgba(15,23,42,0.12)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:border-line"
+      >
+        <span>
+          <span className="block text-sm font-extrabold text-ink">Project Structure</span>
+          <span className="mt-1 block text-xs font-semibold text-slate-500">Click here to open repository tree views</span>
+        </span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-violet-50 text-brand">
+          <ListTree size={19} />
+        </span>
+      </button>
     </div>
   );
 };

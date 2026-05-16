@@ -21,10 +21,10 @@ const RESPONSE_SCHEMA = {
 };
 
 const MAX_OUTPUT_TOKENS_BY_MODE = {
-  fast: 1600,
-  standard: 2200,
-  beginner: 2200,
-  recruiter: 1800,
+  fast: 4096,
+  standard: 6144,
+  beginner: 6144,
+  recruiter: 4096,
 };
 
 const fallbackAnalysis = ({ repository, techStack, tree }) => ({
@@ -101,9 +101,26 @@ const extractJson = (content) => {
 const parseGeminiJsonResponse = (content) => {
   try {
     return JSON.parse(extractJson(content));
-  } catch {
-    throw new AppError('Gemini returned invalid JSON.', 502);
+  } catch (error) {
+    throw new AppError('Gemini returned invalid JSON.', 502, error.message);
   }
+};
+
+const repairGeminiJsonResponse = async (model, content) => {
+  const repairPrompt = [
+    'Convert the following text into one valid compact JSON object.',
+    'Return only JSON. Do not add markdown, explanations, or comments.',
+    `The JSON must follow this schema: ${JSON.stringify(RESPONSE_SCHEMA)}`,
+    extractJson(content),
+  ].join('\n\n');
+
+  const result = await model.generateContent(repairPrompt);
+  const repairedContent = result.response.text();
+  if (!repairedContent) {
+    throw new AppError('Gemini returned an empty repaired analysis.', 502);
+  }
+
+  return parseGeminiJsonResponse(repairedContent);
 };
 
 const getGeminiFriendlyMessage = (message) => {
@@ -173,7 +190,13 @@ export const generateRepositoryAnalysis = async (payload, messages) => {
       throw new AppError('Gemini returned an empty analysis.', 502);
     }
 
-    return parseGeminiJsonResponse(content);
+    try {
+      return parseGeminiJsonResponse(content);
+    } catch (parseError) {
+      return await repairGeminiJsonResponse(model, content).catch(() => {
+        throw parseError;
+      });
+    }
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw buildGeminiError(error);

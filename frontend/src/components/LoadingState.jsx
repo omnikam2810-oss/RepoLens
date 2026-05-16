@@ -2,6 +2,17 @@ const shimmerRows = Array.from({ length: 9 }, (_, index) => index);
 
 const LoadingState = () => (
   <div className="space-y-5">
+    <div className="rounded-lg border border-brand/20 bg-white p-5 shadow-soft">
+      <div className="flex items-center gap-3">
+        <div className="h-3 w-3 animate-ping rounded-full bg-brand" />
+        <div>
+          <p className="text-base font-extrabold text-ink">Wait for a while, reports are generating.</p>
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            RepoLens is fetching repository data and preparing your AI report.
+          </p>
+        </div>
+      </div>
+    </div>
     <div className="rounded-lg border border-line bg-white p-6 shadow-soft">
       <div className="h-5 w-44 animate-pulse rounded bg-slate-200" />
       <div className="mt-5 space-y-3">

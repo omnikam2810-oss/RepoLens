@@ -1,4 +1,5 @@
 import { parsePackageJson, parseRequirementsTxt } from '../parsers/dependencyParser.js';
+import { sanitizeTechStack } from '../utils/techStack.js';
 
 const dependencySignals = {
   react: 'React',
@@ -7,7 +8,6 @@ const dependencySignals = {
   express: 'Express.js',
   mongoose: 'MongoDB/Mongoose',
   tailwindcss: 'Tailwind CSS',
-  axios: 'Axios',
   typescript: 'TypeScript',
   jest: 'Jest',
   vitest: 'Vitest',
@@ -63,7 +63,7 @@ export const detectTechnologies = ({ files, tree }) => {
   if (paths.some((path) => path.endsWith('.java'))) detected.add('Java');
 
   return {
-    techStack: [...detected],
+    techStack: sanitizeTechStack([...detected]),
     dependencyInsights,
   };
 };

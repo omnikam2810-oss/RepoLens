@@ -4,7 +4,7 @@ const AnalysisContext = createContext(null);
 
 export const AnalysisProvider = ({ children }) => {
   const [analysisResult, setAnalysisResult] = useState(null);
-  const [mode, setMode] = useState('standard');
+  const [mode, setMode] = useState('fast');
 
   const value = useMemo(
     () => ({ analysisResult, setAnalysisResult, mode, setMode }),

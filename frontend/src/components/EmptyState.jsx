@@ -129,6 +129,7 @@ const EmptyState = ({
                 onChange={(event) => onModeChange(event.target.value)}
                 className="h-14 rounded-xl border border-transparent bg-slate-50 px-4 text-sm font-bold text-slate-700 outline-none transition hover:bg-white focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(192,132,252,0.16)]"
               >
+                <option value="fast">Fast</option>
                 <option value="standard">Standard</option>
                 <option value="beginner">Beginner</option>
                 <option value="recruiter">Recruiter</option>

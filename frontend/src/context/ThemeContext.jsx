@@ -4,12 +4,12 @@ const ThemeContext = createContext(null);
 const STORAGE_KEY = 'repolens-theme';
 
 const getInitialTheme = () => {
-  if (typeof window === 'undefined') return 'light';
+  if (typeof window === 'undefined') return 'dark';
 
   const storedTheme = window.localStorage.getItem(STORAGE_KEY);
   if (storedTheme === 'dark' || storedTheme === 'light') return storedTheme;
 
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'dark';
 };
 
 export const ThemeProvider = ({ children }) => {

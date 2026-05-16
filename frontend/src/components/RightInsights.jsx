@@ -1,8 +1,10 @@
 import { Activity, Boxes, GitFork, ListTree, Star } from 'lucide-react';
+import { sanitizeTechStack } from '../utils/techStack';
 
 const RightInsights = ({ result, onNavigateStructure }) => {
   const repository = result?.repository;
   const analysis = result?.analysis;
+  const techStack = sanitizeTechStack(analysis?.techStack?.length ? analysis.techStack : result?.techStack || []);
 
   return (
     <div className="h-full space-y-5 overflow-auto scrollbar-thin">
@@ -33,7 +35,7 @@ const RightInsights = ({ result, onNavigateStructure }) => {
       <div className="surface-card card-glow rounded-2xl p-5">
         <p className="text-sm font-extrabold text-ink">Tech Stack</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          {(analysis?.techStack?.length ? analysis.techStack : result?.techStack || []).map((tech) => (
+          {techStack.map((tech) => (
             <span key={tech} className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-brand">
               {tech}
             </span>

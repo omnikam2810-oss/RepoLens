@@ -20,6 +20,13 @@ const RESPONSE_SCHEMA = {
   codeQualityScore: { score: 'number from 0 to 100', rationale: 'string' },
 };
 
+const MAX_OUTPUT_TOKENS_BY_MODE = {
+  fast: 1600,
+  standard: 2200,
+  beginner: 2200,
+  recruiter: 1800,
+};
+
 const fallbackAnalysis = ({ repository, techStack, tree }) => ({
   projectSummary: repository.description || `${repository.name} is a public GitHub repository that needs AI analysis for deeper explanation.`,
   projectPurpose: 'Set GEMINI_API_KEY on the backend to generate a full AI-powered purpose analysis.',
@@ -49,6 +56,25 @@ export const createGeminiClient = () => {
   return new GoogleGenerativeAI(env.geminiApiKey);
 };
 
+const geminiModels = new Map();
+
+const getGeminiModel = (mode = 'fast') => {
+  const cacheKey = `${env.geminiModel}:${mode}`;
+  if (!geminiModels.has(cacheKey)) {
+    const client = createGeminiClient();
+    geminiModels.set(cacheKey, client.getGenerativeModel({
+      model: env.geminiModel,
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: MAX_OUTPUT_TOKENS_BY_MODE[mode] || MAX_OUTPUT_TOKENS_BY_MODE.fast,
+        responseMimeType: 'application/json',
+      },
+    }));
+  }
+
+  return geminiModels.get(cacheKey);
+};
+
 export const buildGeminiRepositoryPrompt = ({ messages }) => {
   const systemInstruction = messages.find((message) => message.role === 'system')?.content || '';
   const userContent = messages
@@ -58,7 +84,7 @@ export const buildGeminiRepositoryPrompt = ({ messages }) => {
 
   return [
     systemInstruction,
-    'Return only valid JSON. Do not include markdown fences, commentary, or extra text.',
+    'Return only valid compact JSON. Do not include markdown fences, commentary, or extra text.',
     `The JSON must follow this schema: ${JSON.stringify(RESPONSE_SCHEMA)}`,
     userContent,
   ]
@@ -137,16 +163,9 @@ export const generateRepositoryAnalysis = async (payload, messages) => {
   }
 
   try {
-    const client = createGeminiClient();
-    const model = client.getGenerativeModel({
-      model: env.geminiModel,
-      generationConfig: {
-        temperature: 0.2,
-        responseMimeType: 'application/json',
-      },
-    });
-
     const prompt = buildGeminiRepositoryPrompt({ messages });
+    const mode = payload.mode || 'fast';
+    const model = getGeminiModel(mode);
     const result = await model.generateContent(prompt);
     const content = result.response.text();
 

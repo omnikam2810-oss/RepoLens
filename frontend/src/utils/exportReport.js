@@ -1,3 +1,5 @@
+import { sanitizeTechStack } from './techStack';
+
 const asList = (items = []) => {
   if (!Array.isArray(items) || !items.length) return 'Not available';
   return items.map((item) => `- ${item}`).join('\n');
@@ -40,7 +42,7 @@ const buildTextReport = (analysisResult) => {
     '',
     'Tech Stack',
     '----------',
-    asList(analysis.techStack?.length ? analysis.techStack : analysisResult.techStack),
+    asList(sanitizeTechStack(analysis.techStack?.length ? analysis.techStack : analysisResult.techStack)),
     '',
     'Features',
     '--------',

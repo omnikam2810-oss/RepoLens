@@ -11,9 +11,9 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
     >
-      {!fullWidth && <aside className="lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{leftSidebar}</aside>}
-      <main className="min-w-0">{children}</main>
-      {!fullWidth && <aside className="lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{rightSidebar}</aside>}
+      {!fullWidth && <aside className="order-2 lg:order-none lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{leftSidebar}</aside>}
+      <main className="order-1 min-w-0 lg:order-none">{children}</main>
+      {!fullWidth && <aside className="order-3 lg:order-none lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{rightSidebar}</aside>}
     </motion.div>
   </div>
 );

@@ -1,5 +1,6 @@
 import { env } from '../config/env.js';
 import {
+  FILE_FETCH_CONCURRENCY,
   MAX_FILE_CHARS,
   MAX_IMPORTANT_FILES,
   MAX_TREE_ITEMS,
@@ -63,16 +64,36 @@ const githubRequest = async (path) => {
 
 const decodeBase64 = (value) => Buffer.from(value || '', 'base64').toString('utf8');
 
-const fetchFileContent = async ({ owner, repo, path }) => {
-  const data = await githubRequest(`/repos/${owner}/${repo}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`);
+const fetchFileContent = async ({ owner, repo, path, sha }) => {
+  const data = sha
+    ? await githubRequest(`/repos/${owner}/${repo}/git/blobs/${sha}`)
+    : await githubRequest(`/repos/${owner}/${repo}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`);
   if (!data.content) return '';
   return decodeBase64(data.content).slice(0, MAX_FILE_CHARS);
 };
 
-export const fetchRepositorySnapshot = async ({ owner, repo }) => {
+const mapWithConcurrency = async (items, limit, mapper) => {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await mapper(items[currentIndex], currentIndex);
+    }
+  });
+
+  await Promise.all(workers);
+  return results;
+};
+
+export const fetchRepositorySnapshot = async ({ owner, repo, importantFileLimit = MAX_IMPORTANT_FILES }) => {
   const repository = await githubRequest(`/repos/${owner}/${repo}`);
   const branch = repository.default_branch;
-  const treeResponse = await githubRequest(`/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`);
+  const treeResponse = await githubRequest(
+    `/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch).replace(/%2F/g, '/')}?recursive=1`,
+  );
 
   const filteredTree = (treeResponse.tree || [])
     .filter((item) => item.path && !isIgnoredPath(item.path))
@@ -81,21 +102,21 @@ export const fetchRepositorySnapshot = async ({ owner, repo }) => {
       path: item.path,
       type: item.type === 'tree' ? 'directory' : 'file',
       size: item.size || 0,
+      sha: item.sha,
     }));
 
   const importantCandidates = sortImportantFiles(
     filteredTree.filter((item) => item.type === 'file' && isImportantPath(item.path)),
-  ).slice(0, MAX_IMPORTANT_FILES);
+  ).slice(0, Math.min(importantFileLimit || MAX_IMPORTANT_FILES, MAX_IMPORTANT_FILES));
 
-  const importantFiles = [];
-  for (const file of importantCandidates) {
+  const importantFiles = await mapWithConcurrency(importantCandidates, FILE_FETCH_CONCURRENCY, async (file) => {
     try {
-      const content = await fetchFileContent({ owner, repo, path: file.path });
-      importantFiles.push({ path: file.path, size: file.size, content });
+      const content = await fetchFileContent({ owner, repo, path: file.path, sha: file.sha });
+      return { path: file.path, size: file.size, content };
     } catch {
-      importantFiles.push({ path: file.path, size: file.size, content: '' });
+      return { path: file.path, size: file.size, content: '' };
     }
-  }
+  });
 
   return {
     repository: {

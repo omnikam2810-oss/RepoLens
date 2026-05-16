@@ -29,11 +29,11 @@ const Navbar = ({
       </button>
 
       {hasAnalysis && (
-        <div className="flex rounded-xl border border-slate-200/80 bg-slate-100/70 p-1 shadow-inner lg:ml-3">
+        <div className="grid w-full grid-cols-2 rounded-xl border border-slate-200/80 bg-slate-100/70 p-1 shadow-inner lg:ml-3 lg:w-auto">
           <button
             type="button"
             onClick={() => onNavigate('dashboard')}
-            className={`inline-flex h-9 items-center gap-2 rounded-md px-3 text-xs font-extrabold transition ${
+            className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-2 text-xs font-extrabold transition sm:px-3 ${
               currentView === 'dashboard' ? 'bg-white text-brand shadow-sm ring-1 ring-slate-200/70' : 'text-slate-500 hover:bg-white/70 hover:text-ink'
             }`}
           >
@@ -43,7 +43,7 @@ const Navbar = ({
           <button
             type="button"
             onClick={() => onNavigate('structure')}
-            className={`inline-flex h-9 items-center gap-2 rounded-md px-3 text-xs font-extrabold transition ${
+            className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-2 text-xs font-extrabold transition sm:px-3 ${
               currentView === 'structure' ? 'bg-white text-brand shadow-sm ring-1 ring-slate-200/70' : 'text-slate-500 hover:bg-white/70 hover:text-ink'
             }`}
           >
@@ -70,6 +70,7 @@ const Navbar = ({
             onChange={(event) => onModeChange(event.target.value)}
             className="h-11 rounded-xl border border-slate-200 bg-white/95 px-3 text-sm font-semibold text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand focus:shadow-[0_0_0_4px_rgba(192,132,252,0.14)]"
           >
+            <option value="fast">Fast</option>
             <option value="standard">Standard</option>
             <option value="beginner">Beginner</option>
             <option value="recruiter">Recruiter</option>

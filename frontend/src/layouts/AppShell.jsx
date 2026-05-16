@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MoreVertical, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = false }) => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -11,16 +11,6 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
 
       {!fullWidth && (
         <>
-          <button
-            type="button"
-            onClick={() => setIsMobileNavOpen(true)}
-            aria-label="Open report sections"
-            title="Report sections"
-            className="fixed left-3 top-[76px] z-30 grid h-10 w-10 place-items-center rounded-full border border-slate-200 bg-white/95 text-ink shadow-[0_12px_30px_rgba(15,23,42,0.16)] backdrop-blur transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
-          >
-            <MoreVertical size={18} />
-          </button>
-
           {isMobileNavOpen && (
             <div className="fixed inset-0 z-40 lg:hidden">
               <button
@@ -30,10 +20,15 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
                 onClick={() => setIsMobileNavOpen(false)}
               />
               <motion.aside
-                className="absolute left-3 top-[68px] h-[min(78vh,620px)] w-[min(82vw,320px)]"
+                className="absolute left-3 top-[92px] h-[min(76vh,620px)] w-[min(82vw,320px)]"
                 initial={{ opacity: 0, x: -18, scale: 0.98 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.2 }}
+                onClickCapture={(event) => {
+                  if (event.target.closest('button')) {
+                    setIsMobileNavOpen(false);
+                  }
+                }}
               >
                 <button
                   type="button"
@@ -60,7 +55,21 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
         transition={{ duration: 0.35 }}
       >
         {!fullWidth && <aside className="hidden lg:order-none lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-7rem)]">{leftSidebar}</aside>}
-        <main className="order-1 min-w-0 lg:order-none">{children}</main>
+        <main className="order-1 min-w-0 lg:order-none">
+          {!fullWidth && (
+            <button
+              type="button"
+              onClick={() => setIsMobileNavOpen(true)}
+              aria-label="Open report sections"
+              title="Report sections"
+              className="mb-3 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white/95 px-3 text-xs font-extrabold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
+            >
+              <Menu size={17} />
+              Report Sections
+            </button>
+          )}
+          {children}
+        </main>
         {!fullWidth && <aside className="order-3 lg:order-none lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{rightSidebar}</aside>}
       </motion.div>
     </div>

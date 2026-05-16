@@ -11,6 +11,17 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
 
       {!fullWidth && (
         <>
+          <button
+            type="button"
+            onClick={() => setIsMobileNavOpen(true)}
+            aria-label="Open report sections"
+            title="Report sections"
+            className="fixed left-3 top-[84px] z-30 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white/95 px-3 text-xs font-extrabold text-ink shadow-[0_12px_30px_rgba(15,23,42,0.16)] backdrop-blur transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
+          >
+            <Menu size={17} />
+            Report Sections
+          </button>
+
           {isMobileNavOpen && (
             <div className="fixed inset-0 z-40 lg:hidden">
               <button
@@ -55,21 +66,7 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
         transition={{ duration: 0.35 }}
       >
         {!fullWidth && <aside className="hidden lg:order-none lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-7rem)]">{leftSidebar}</aside>}
-        <main className="order-1 min-w-0 lg:order-none">
-          {!fullWidth && (
-            <button
-              type="button"
-              onClick={() => setIsMobileNavOpen(true)}
-              aria-label="Open report sections"
-              title="Report sections"
-              className="mb-3 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white/95 px-3 text-xs font-extrabold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
-            >
-              <Menu size={17} />
-              Report Sections
-            </button>
-          )}
-          {children}
-        </main>
+        <main className="order-1 min-w-0 pt-12 lg:order-none lg:pt-0">{children}</main>
         {!fullWidth && <aside className="order-3 lg:order-none lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">{rightSidebar}</aside>}
       </motion.div>
     </div>

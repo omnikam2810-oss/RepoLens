@@ -53,7 +53,7 @@ const TreeNode = ({ node, depth = 0, spacious = false }) => {
   const children = [...node.children.values()].sort(sortTreeNodes);
   const isDirectory = node.type === 'directory';
   const Icon = isDirectory ? Folder : FileCode2;
-  const indent = spacious ? 28 : 18;
+  const indent = spacious ? 22 : 18;
   const maxIndent = spacious ? 168 : 72;
 
   return (
@@ -100,7 +100,7 @@ export const FloatingRepositoryTree = ({ tree = [], maxNodes = MAX_TREE_NODES, s
   const floatingTree = buildFloatingTree(tree, maxNodes);
 
   return (
-    <div className={`rounded-lg border border-slate-100 bg-slate-50/80 ${spacious ? 'p-4' : 'p-2'}`}>
+    <div className={`rounded-lg border border-slate-100 bg-slate-50/80 ${spacious ? 'p-3 sm:p-4' : 'p-2'}`}>
       <div className={spacious ? 'space-y-3' : 'space-y-2'}>
         {floatingTree.map((node) => (
           <TreeNode key={node.path} node={node} spacious={spacious} />
@@ -133,8 +133,8 @@ const scrollToSection = (sectionId) => {
 
 const SidebarTree = ({ tree = [], importantFiles = [], result }) => {
   return (
-    <div className="surface-card card-glow h-full overflow-hidden rounded-2xl">
-      <div className="border-b border-line bg-white/80 p-4">
+    <div className="surface-card card-glow h-full overflow-hidden rounded-xl sm:rounded-2xl">
+      <div className="border-b border-line bg-white/80 p-3 sm:p-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
             <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-ink text-white shadow-sm">
@@ -158,7 +158,7 @@ const SidebarTree = ({ tree = [], importantFiles = [], result }) => {
           </button>
         </div>
       </div>
-      <div className="scrollbar-thin max-h-[calc(100%-73px)] overflow-auto p-3">
+      <div className="scrollbar-thin max-h-[calc(100%-68px)] overflow-auto p-2.5 sm:max-h-[calc(100%-73px)] sm:p-3">
         <div>
           <div className="space-y-2">
             {reportSections.map((section) => {
@@ -169,7 +169,7 @@ const SidebarTree = ({ tree = [], importantFiles = [], result }) => {
                   type="button"
                   onClick={() => scrollToSection(section.id)}
                   disabled={!result}
-                  className="flex w-full items-center gap-2 rounded-xl border border-line bg-slate-50/80 px-3 py-3 text-left text-xs font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white hover:text-brand disabled:cursor-not-allowed disabled:opacity-45"
+                  className="flex w-full items-center gap-2 rounded-lg border border-line bg-slate-50/80 px-3 py-2.5 text-left text-xs font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white hover:text-brand disabled:cursor-not-allowed disabled:opacity-45 sm:rounded-xl sm:py-3"
                 >
                   <Icon size={15} className="shrink-0" />
                   <span className="truncate">{section.label}</span>

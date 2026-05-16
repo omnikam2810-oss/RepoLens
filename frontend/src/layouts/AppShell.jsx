@@ -4,7 +4,7 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
   <div className="min-h-screen">
     {navbar}
     <motion.div
-      className={`mx-auto grid w-full max-w-[1540px] grid-cols-1 gap-6 px-4 py-6 lg:px-6 ${
+      className={`mx-auto grid w-full max-w-[1540px] grid-cols-1 gap-4 px-3 py-4 sm:px-4 sm:py-5 lg:gap-6 lg:px-6 lg:py-6 ${
         fullWidth ? '' : 'lg:grid-cols-[280px_minmax(0,1fr)_320px]'
       }`}
       initial={{ opacity: 0, y: 12 }}

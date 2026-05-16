@@ -198,7 +198,7 @@ const TreeMapView = ({ tree, repositoryName }) => {
   const layout = useMemo(() => createMapLayout(tree), [tree]);
 
   return (
-    <div className="overflow-auto rounded-2xl border border-line bg-[#eee6ff] p-5 shadow-inner">
+    <div className="overflow-auto rounded-xl border border-line bg-[#eee6ff] p-3 shadow-inner sm:rounded-2xl sm:p-5">
       <div
         className="relative mx-auto overflow-hidden rounded-lg border border-white/80 bg-white/45 shadow-inner"
         style={{ width: `${layout.canvasWidth}px`, height: `${layout.canvasHeight}px` }}
@@ -278,11 +278,11 @@ const ClickableExplorerView = ({ tree, repositoryName }) => {
   };
 
   return (
-    <div className="surface-card overflow-hidden rounded-2xl">
-      <div className="flex items-center gap-2 border-b border-line bg-slate-50 px-4 py-4">
+    <div className="surface-card overflow-hidden rounded-xl sm:rounded-2xl">
+      <div className="flex items-center gap-2 border-b border-line bg-slate-50 px-3 py-3 sm:px-4 sm:py-4">
         <ChevronDown size={17} className="text-slate-500" />
         <Folder size={22} className="text-amber" />
-        <p className="font-mono text-lg font-extrabold text-ink">{repositoryName || 'repository'}</p>
+        <p className="truncate font-mono text-base font-extrabold text-ink sm:text-lg">{repositoryName || 'repository'}</p>
       </div>
       <div className="max-h-[760px] overflow-auto font-mono">
         {roots.map((node) => (
@@ -295,14 +295,14 @@ const ClickableExplorerView = ({ tree, repositoryName }) => {
 };
 
 const ImportantFilesView = ({ importantFiles }) => (
-  <div className="surface-card overflow-hidden rounded-2xl">
+  <div className="surface-card overflow-hidden rounded-xl sm:rounded-2xl">
     <div className="border-b border-line bg-slate-50 px-4 py-3">
       <p className="text-sm font-extrabold text-ink">Important Files</p>
       <p className="mt-1 text-xs font-medium text-slate-500">Key files selected for AI repository analysis.</p>
     </div>
-    <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-3 p-3 sm:p-4 md:grid-cols-2 xl:grid-cols-3">
       {importantFiles.map((file) => (
-        <div key={file.path} className="rounded-xl border border-line bg-slate-50/80 p-4 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white hover:shadow-sm">
+        <div key={file.path} className="rounded-lg border border-line bg-slate-50/80 p-3 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white hover:shadow-sm sm:rounded-xl sm:p-4">
           <div className="flex items-center gap-2">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-violet-50 text-brand">
               <FileCode2 size={16} />
@@ -333,16 +333,16 @@ const ProjectStructurePage = ({ result, onBack }) => {
   const fileCount = countByType(tree, 'file');
 
   return (
-    <div className="space-y-5">
-      <section className="surface-card card-glow overflow-hidden rounded-2xl">
-        <div className="flex flex-col gap-5 border-b border-line p-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-ink text-white">
+    <div className="space-y-4 sm:space-y-5">
+      <section className="surface-card card-glow overflow-hidden rounded-xl sm:rounded-2xl">
+        <div className="flex flex-col gap-4 border-b border-line p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ink text-white sm:h-12 sm:w-12">
               <GitBranch size={23} />
             </div>
             <div>
-              <p className="text-sm font-bold uppercase tracking-normal text-slate-500">Project Structure</p>
-              <h1 className="mt-1 text-2xl font-extrabold tracking-normal text-ink md:text-3xl">
+              <p className="text-xs font-bold uppercase tracking-normal text-slate-500 sm:text-sm">Project Structure</p>
+              <h1 className="mt-1 break-words text-xl font-extrabold tracking-normal text-ink sm:text-2xl md:text-3xl">
                 {repository?.fullName || 'Repository tree'}
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
@@ -353,47 +353,48 @@ const ProjectStructurePage = ({ result, onBack }) => {
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-extrabold text-ink transition hover:border-brand hover:text-brand"
+            className="inline-flex h-9 w-fit items-center justify-center gap-1.5 rounded-lg border border-line bg-white px-3 text-xs font-extrabold text-ink transition hover:border-brand hover:text-brand sm:h-10 sm:gap-2 sm:px-4 sm:text-sm"
           >
             <ArrowLeft size={17} />
             Dashboard
           </button>
         </div>
 
-        <div className="grid gap-3 p-6 sm:grid-cols-3">
-          <div className="rounded-2xl border border-line bg-slate-50/80 p-4 shadow-inner">
+        <div className="grid grid-cols-3 gap-2 p-4 sm:gap-3 sm:p-6">
+          <div className="rounded-lg border border-line bg-slate-50/80 p-3 shadow-inner sm:rounded-2xl sm:p-4">
             <div className="flex items-center gap-2 text-sm font-extrabold text-ink">
               <Boxes size={17} className="text-brand" />
-              Indexed Paths
+              <span className="hidden sm:inline">Indexed Paths</span>
+              <span className="sm:hidden">Paths</span>
             </div>
-            <p className="mt-2 text-2xl font-extrabold text-ink">{tree.length}</p>
+            <p className="mt-2 text-xl font-extrabold text-ink sm:text-2xl">{tree.length}</p>
           </div>
-          <div className="rounded-2xl border border-line bg-slate-50/80 p-4 shadow-inner">
+          <div className="rounded-lg border border-line bg-slate-50/80 p-3 shadow-inner sm:rounded-2xl sm:p-4">
             <div className="flex items-center gap-2 text-sm font-extrabold text-ink">
               <Folder size={17} className="text-amber" />
               Folders
             </div>
-            <p className="mt-2 text-2xl font-extrabold text-ink">{directoryCount}</p>
+            <p className="mt-2 text-xl font-extrabold text-ink sm:text-2xl">{directoryCount}</p>
           </div>
-          <div className="rounded-2xl border border-line bg-slate-50/80 p-4 shadow-inner">
+          <div className="rounded-lg border border-line bg-slate-50/80 p-3 shadow-inner sm:rounded-2xl sm:p-4">
             <div className="flex items-center gap-2 text-sm font-extrabold text-ink">
               <FileCode2 size={17} className="text-emerald" />
               Files
             </div>
-            <p className="mt-2 text-2xl font-extrabold text-ink">{fileCount}</p>
+            <p className="mt-2 text-xl font-extrabold text-ink sm:text-2xl">{fileCount}</p>
           </div>
         </div>
       </section>
 
       <section>
-        <div className="surface-card card-glow rounded-2xl p-5">
+        <div className="surface-card card-glow rounded-xl p-4 sm:rounded-2xl sm:p-5">
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm font-extrabold text-ink">Floating Repository Tree</p>
             {tree.length > 220 && (
               <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-brand">Top 220 paths</span>
             )}
           </div>
-          <div className="mb-5 grid gap-2 md:grid-cols-4">
+          <div className="mb-4 grid grid-cols-2 gap-2 sm:mb-5 md:grid-cols-4">
             {structureModes.map((mode) => {
               const Icon = mode.icon;
               return (
@@ -401,7 +402,7 @@ const ProjectStructurePage = ({ result, onBack }) => {
                   key={mode.id}
                   type="button"
                   onClick={() => setActiveMode(mode.id)}
-                  className={`flex h-11 items-center justify-center gap-2 rounded-xl border px-3 text-sm font-extrabold transition hover:-translate-y-0.5 ${
+                  className={`flex h-9 items-center justify-center gap-1.5 rounded-lg border px-2 text-xs font-extrabold transition hover:-translate-y-0.5 sm:h-11 sm:gap-2 sm:rounded-xl sm:px-3 sm:text-sm ${
                     activeMode === mode.id
                       ? 'border-brand bg-violet-50 text-brand'
                       : 'border-line bg-white text-slate-600 hover:border-brand hover:text-brand'

@@ -24,7 +24,7 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
                 initial={{ opacity: 0, x: -18, scale: 0.98 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.2 }}
-                onClickCapture={(event) => {
+                onClick={(event) => {
                   if (event.target.closest('button')) {
                     setIsMobileNavOpen(false);
                   }

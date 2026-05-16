@@ -16,10 +16,9 @@ const AppShell = ({ navbar, leftSidebar, children, rightSidebar, fullWidth = fal
             onClick={() => setIsMobileNavOpen(true)}
             aria-label="Open report sections"
             title="Report sections"
-            className="fixed left-3 top-[84px] z-30 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white/95 px-3 text-xs font-extrabold text-ink shadow-[0_12px_30px_rgba(15,23,42,0.16)] backdrop-blur transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
+            className="fixed left-3 top-[84px] z-30 grid h-9 w-9 place-items-center rounded-lg border border-slate-200 bg-white/95 text-ink shadow-[0_12px_30px_rgba(15,23,42,0.16)] backdrop-blur transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:hidden"
           >
             <Menu size={17} />
-            Report Sections
           </button>
 
           {isMobileNavOpen && (

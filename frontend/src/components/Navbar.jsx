@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { BrainCircuit, GitBranch, Github, LayoutDashboard, Loader2, Moon, Search, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -13,7 +14,19 @@ const Navbar = ({
   hasAnalysis,
 }) => {
   const { isDark, toggleTheme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
   const ThemeIcon = isDark ? Sun : Moon;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
   <header className="sticky top-0 z-20 border-b border-white/70 bg-white/86 shadow-[0_12px_34px_rgba(15,23,42,0.07)] backdrop-blur-2xl">
@@ -65,7 +78,12 @@ const Navbar = ({
       )}
 
       {hasAnalysis && (
-        <form className="grid flex-1 grid-cols-[minmax(0,1fr)_94px] gap-2 lg:ml-6 lg:flex lg:flex-row lg:gap-3" onSubmit={onAnalyze}>
+        <form
+          className={`grid flex-1 grid-cols-[minmax(0,1fr)_94px] gap-2 overflow-hidden transition-all duration-200 lg:ml-6 lg:flex lg:flex-row lg:gap-3 lg:overflow-visible lg:opacity-100 ${
+            isScrolled ? 'max-h-0 opacity-0 lg:max-h-none' : 'max-h-24 opacity-100 lg:max-h-none'
+          }`}
+          onSubmit={onAnalyze}
+        >
           <div className="relative col-span-2 flex-1 sm:col-span-1">
             <Github className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={19} />
             <input

@@ -50,7 +50,7 @@ const AnalysisReport = ({ result }) => {
         </div>
       </Section>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6">
         <Section id="architecture-overview" icon={Layers3} title="Architecture Overview">
           <BulletList items={toBulletItems(analysis.architectureOverview)} />
         </Section>
@@ -63,7 +63,7 @@ const AnalysisReport = ({ result }) => {
         <BulletList items={analysis.features || []} />
       </Section>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6">
         <Section id="folder-explanation" icon={BookOpen} title="Folder Explanation">
           <div className="space-y-3">
             {(analysis.folderExplanation || []).map((folder) => (
@@ -86,7 +86,7 @@ const AnalysisReport = ({ result }) => {
         </Section>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6">
         <Section id="suggestions" icon={Lightbulb} title="Suggestions">
           <BulletList items={analysis.suggestions || []} />
         </Section>
@@ -95,7 +95,7 @@ const AnalysisReport = ({ result }) => {
         </Section>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6">
         <Section id="quality-score" icon={Gauge} title="Quality Score">
           <div className="flex items-center gap-5">
             <div className="grid h-24 w-24 shrink-0 place-items-center rounded-full border-8 border-violet-100 bg-white shadow-inner">

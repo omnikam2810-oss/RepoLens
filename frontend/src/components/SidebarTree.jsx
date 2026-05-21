@@ -149,8 +149,8 @@ const SidebarTree = ({ tree = [], importantFiles = [], result }) => {
             type="button"
             onClick={() => exportReport(result)}
             disabled={!result}
-            aria-label="Export report as text"
-            title="Export report as text"
+            aria-label="Export report as PDF"
+            title="Export report as PDF"
             className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 text-xs font-extrabold text-slate-600 transition hover:-translate-y-0.5 hover:border-brand hover:text-brand hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Download size={15} />

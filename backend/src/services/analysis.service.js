@@ -31,7 +31,7 @@ const getImportantFileLimit = (mode) => (mode === 'fast' ? MAX_FAST_IMPORTANT_FI
 
 const serializeTree = (tree) => tree.map(({ path, type, size }) => ({ path, type, size }));
 
-export const analyzeRepository = async ({ owner, repo, normalizedUrl, mode = 'fast' }) => {
+export const analyzeRepository = async ({ owner, repo, normalizedUrl, mode = 'standard' }) => {
   const cacheKey = getCacheKey({ owner, repo, mode });
   const cached = getCachedAnalysis(cacheKey);
   if (cached) {

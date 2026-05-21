@@ -48,7 +48,7 @@ const featureCards = [
 ];
 
 const workflowSteps = [
-  ['01', 'Paste a public repository', 'RepoLens validates the GitHub URL and prepares the analysis mode.'],
+  ['01', 'Paste a public repository', 'RepoLens validates the GitHub URL and prepares a balanced analysis.'],
   ['02', 'Build a repository snapshot', 'The backend fetches metadata, directory structure, and high-signal files.'],
   ['03', 'Generate structured insight', 'Gemini returns a typed report for developers, recruiters, and teams.'],
 ];
@@ -84,8 +84,6 @@ const EmptyState = ({
   onRepositoryUrlChange,
   onAnalyze,
   isLoading,
-  mode,
-  onModeChange,
   onExampleSelect,
 }) => (
   <div id="top" className="landing-page overflow-hidden">
@@ -113,7 +111,7 @@ const EmptyState = ({
             onSubmit={onAnalyze}
             className="mt-6 max-w-4xl rounded-xl border border-slate-200 bg-white/95 p-2 shadow-[0_18px_48px_rgba(15,23,42,0.10)] sm:mt-9 sm:rounded-2xl sm:shadow-[0_24px_60px_rgba(15,23,42,0.12)]"
           >
-            <div className="grid grid-cols-[minmax(0,1fr)_112px] gap-2 lg:grid-cols-[minmax(0,1fr)_150px_190px]">
+            <div className="grid grid-cols-[minmax(0,1fr)_112px] gap-2 lg:grid-cols-[minmax(0,1fr)_190px]">
               <label className="relative col-span-2 block sm:col-span-1">
                 <Github className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 sm:left-4" size={20} />
                 <input
@@ -123,17 +121,6 @@ const EmptyState = ({
                   className="h-11 w-full rounded-lg border border-transparent bg-slate-50 pl-10 pr-3 text-sm font-semibold text-ink outline-none transition placeholder:text-slate-400 hover:bg-white focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(192,132,252,0.16)] sm:h-14 sm:rounded-xl sm:pl-12 sm:pr-4 sm:text-base"
                 />
               </label>
-
-              <select
-                value={mode}
-                onChange={(event) => onModeChange(event.target.value)}
-                className="h-11 min-w-0 rounded-lg border border-transparent bg-slate-50 px-3 text-xs font-bold text-slate-700 outline-none transition hover:bg-white focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(192,132,252,0.16)] sm:h-14 sm:rounded-xl sm:px-4 sm:text-sm"
-              >
-                <option value="fast">Fast</option>
-                <option value="standard">Standard</option>
-                <option value="beginner">Beginner</option>
-                <option value="recruiter">Recruiter</option>
-              </select>
 
               <button
                 type="submit"

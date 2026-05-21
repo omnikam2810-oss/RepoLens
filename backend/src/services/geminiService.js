@@ -58,7 +58,7 @@ export const createGeminiClient = () => {
 
 const geminiModels = new Map();
 
-const getGeminiModel = (mode = 'fast') => {
+const getGeminiModel = (mode = 'standard') => {
   const cacheKey = `${env.geminiModel}:${mode}`;
   if (!geminiModels.has(cacheKey)) {
     const client = createGeminiClient();
@@ -66,7 +66,7 @@ const getGeminiModel = (mode = 'fast') => {
       model: env.geminiModel,
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: MAX_OUTPUT_TOKENS_BY_MODE[mode] || MAX_OUTPUT_TOKENS_BY_MODE.fast,
+        maxOutputTokens: MAX_OUTPUT_TOKENS_BY_MODE[mode] || MAX_OUTPUT_TOKENS_BY_MODE.standard,
         responseMimeType: 'application/json',
       },
     }));
@@ -181,7 +181,7 @@ export const generateRepositoryAnalysis = async (payload, messages) => {
 
   try {
     const prompt = buildGeminiRepositoryPrompt({ messages });
-    const mode = payload.mode || 'fast';
+    const mode = payload.mode || 'standard';
     const model = getGeminiModel(mode);
     const result = await model.generateContent(prompt);
     const content = result.response.text();

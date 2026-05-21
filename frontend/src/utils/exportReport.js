@@ -108,14 +108,125 @@ const buildTextReport = (analysisResult) => {
   ].join('\n');
 };
 
+const escapePdfText = (value) =>
+  String(value)
+    .normalize('NFKD')
+    .replace(/[^\x20-\x7E\n]/g, '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)');
+
+const wrapLine = (line, maxLength = 95) => {
+  if (!line.trim()) return [''];
+
+  const prefix = line.startsWith('- ') ? '  ' : '';
+  const words = line.split(/\s+/);
+  const wrapped = [];
+  let current = '';
+
+  words.forEach((word) => {
+    const next = current ? `${current} ${word}` : word;
+
+    if (next.length <= maxLength) {
+      current = next;
+      return;
+    }
+
+    if (current) wrapped.push(current);
+
+    if (word.length > maxLength) {
+      for (let index = 0; index < word.length; index += maxLength) {
+        wrapped.push(`${prefix}${word.slice(index, index + maxLength)}`);
+      }
+      current = '';
+      return;
+    }
+
+    current = `${prefix}${word}`;
+  });
+
+  if (current) wrapped.push(current);
+  return wrapped;
+};
+
+const paginateText = (text) => {
+  const lines = text
+    .split('\n')
+    .flatMap((line) => wrapLine(line));
+  const pageSize = 54;
+  const pages = [];
+
+  for (let index = 0; index < lines.length; index += pageSize) {
+    pages.push(lines.slice(index, index + pageSize));
+  }
+
+  return pages.length ? pages : [['RepoLens Repository Analysis Report']];
+};
+
+const buildPdf = (text) => {
+  const encoder = new TextEncoder();
+  const pages = paginateText(text);
+  const pageObjects = [];
+  const contentObjects = [];
+  const objects = new Map();
+
+  pages.forEach((pageLines, index) => {
+    const pageObjectId = 4 + index * 2;
+    const contentObjectId = pageObjectId + 1;
+    pageObjects.push(pageObjectId);
+    contentObjects.push(contentObjectId);
+
+    const content = [
+      'BT',
+      '/F1 10.5 Tf',
+      '14 TL',
+      '50 792 Td',
+      ...pageLines.map((line, lineIndex) => `${lineIndex ? 'T* ' : ''}(${escapePdfText(line)}) Tj`),
+      'ET',
+    ].join('\n');
+
+    objects.set(
+      contentObjectId,
+      `<< /Length ${encoder.encode(content).length} >>\nstream\n${content}\nendstream`,
+    );
+    objects.set(
+      pageObjectId,
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentObjectId} 0 R >>`,
+    );
+  });
+
+  objects.set(1, '<< /Type /Catalog /Pages 2 0 R >>');
+  objects.set(2, `<< /Type /Pages /Kids [${pageObjects.map((id) => `${id} 0 R`).join(' ')}] /Count ${pageObjects.length} >>`);
+  objects.set(3, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+
+  const orderedIds = [1, 2, 3, ...pages.flatMap((_, index) => [4 + index * 2, 5 + index * 2])];
+  const chunks = ['%PDF-1.4\n'];
+  const offsets = [0];
+
+  orderedIds.forEach((id) => {
+    offsets[id] = encoder.encode(chunks.join('')).length;
+    chunks.push(`${id} 0 obj\n${objects.get(id)}\nendobj\n`);
+  });
+
+  const xrefOffset = encoder.encode(chunks.join('')).length;
+  chunks.push(`xref\n0 ${orderedIds.length + 1}\n`);
+  chunks.push('0000000000 65535 f \n');
+  orderedIds.forEach((id) => {
+    chunks.push(`${String(offsets[id]).padStart(10, '0')} 00000 n \n`);
+  });
+  chunks.push(`trailer\n<< /Size ${orderedIds.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+
+  return chunks.join('');
+};
+
 export const exportReport = (analysisResult) => {
   if (!analysisResult) return;
 
-  const fileName = `${analysisResult.repository?.name || 'repository'}-repolens-report.txt`
+  const fileName = `${analysisResult.repository?.name || 'repository'}-repolens-report.pdf`
     .replace(/[<>:"/\\|?*]+/g, '-')
     .toLowerCase();
-  const blob = new Blob([buildTextReport(analysisResult)], {
-    type: 'text/plain;charset=utf-8',
+  const blob = new Blob([buildPdf(buildTextReport(analysisResult))], {
+    type: 'application/pdf',
   });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');

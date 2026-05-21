@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AnalysisReport from '../components/AnalysisReport';
 import EmptyState from '../components/EmptyState';
 import LoadingState from '../components/LoadingState';
@@ -13,8 +13,14 @@ import ProjectStructurePage from './ProjectStructurePage';
 const AnalyzerPage = () => {
   const [repositoryUrl, setRepositoryUrl] = useState('');
   const [currentView, setCurrentView] = useState('dashboard');
-  const { analysisResult, setAnalysisResult, mode, setMode } = useAnalysisContext();
+  const { analysisResult, setAnalysisResult, mode } = useAnalysisContext();
   const { analyzeRepository, isLoading, error, setError } = useRepositoryAnalysis();
+
+  useEffect(() => {
+    if (isLoading) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isLoading]);
 
   const handleAnalyze = async (event) => {
     event.preventDefault();
@@ -41,8 +47,6 @@ const AnalyzerPage = () => {
       onRepositoryUrlChange={setRepositoryUrl}
       onAnalyze={handleAnalyze}
       isLoading={isLoading}
-      mode={mode}
-      onModeChange={setMode}
       currentView={currentView}
       onNavigate={setCurrentView}
       hasAnalysis={Boolean(analysisResult)}
@@ -70,8 +74,6 @@ const AnalyzerPage = () => {
           onRepositoryUrlChange={setRepositoryUrl}
           onAnalyze={handleAnalyze}
           isLoading={isLoading}
-          mode={mode}
-          onModeChange={setMode}
           onExampleSelect={handleExampleSelect}
         />
       </AppShell>
@@ -100,8 +102,6 @@ const AnalyzerPage = () => {
           onRepositoryUrlChange={setRepositoryUrl}
           onAnalyze={handleAnalyze}
           isLoading={isLoading}
-          mode={mode}
-          onModeChange={setMode}
           onExampleSelect={handleExampleSelect}
         />
       )}

@@ -2,20 +2,38 @@ import { useEffect, useState } from 'react';
 import { BrainCircuit, GitBranch, Github, LayoutDashboard, Loader2, Moon, Search, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
+const ThemeSwitch = ({ isDark, onToggle, className = '' }) => (
+  <button
+    type="button"
+    role="switch"
+    onClick={onToggle}
+    aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+    aria-checked={isDark}
+    title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+    className={`theme-switch inline-grid h-9 w-[76px] shrink-0 grid-cols-2 items-center rounded-full border p-1 shadow-sm transition hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-slate-200/70 sm:h-10 sm:w-[84px] ${className}`}
+  >
+    <span className="sr-only">{isDark ? 'Dark theme enabled' : 'Light theme enabled'}</span>
+    <span className={`theme-switch-knob absolute left-1 top-1 h-7 w-7 rounded-full transition-transform duration-300 ease-out sm:h-8 sm:w-8 ${isDark ? 'translate-x-[36px] sm:translate-x-[40px]' : 'translate-x-0'}`} />
+    <span className={`theme-switch-slot relative z-10 grid h-7 w-7 place-items-center rounded-full transition-colors sm:h-8 sm:w-8 ${isDark ? 'text-amber-300' : 'theme-switch-active-text'}`}>
+      <Sun size={18} fill="currentColor" strokeWidth={2.4} />
+    </span>
+    <span className={`theme-switch-slot relative z-10 grid h-7 w-7 place-items-center rounded-full transition-colors sm:h-8 sm:w-8 ${isDark ? 'theme-switch-active-text' : 'text-sky-500'}`}>
+      <Moon size={18} fill="currentColor" strokeWidth={2.4} />
+    </span>
+  </button>
+);
+
 const Navbar = ({
   repositoryUrl,
   onRepositoryUrlChange,
   onAnalyze,
   isLoading,
-  mode,
-  onModeChange,
   currentView,
   onNavigate,
   hasAnalysis,
 }) => {
   const { isDark, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const ThemeIcon = isDark ? Sun : Moon;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,15 +59,7 @@ const Navbar = ({
           <p className="truncate text-[11px] font-medium text-slate-500 sm:text-xs">AI repository intelligence</p>
         </div>
       </button>
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-          title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-          className="theme-toggle grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white/95 text-brand shadow-sm transition hover:-translate-y-0.5 hover:border-brand lg:hidden"
-        >
-          <ThemeIcon size={16} />
-        </button>
+        <ThemeSwitch isDark={isDark} onToggle={toggleTheme} className="relative lg:hidden" />
       </div>
 
       {hasAnalysis && (
@@ -94,17 +104,6 @@ const Navbar = ({
             />
           </div>
 
-          <select
-            value={mode}
-            onChange={(event) => onModeChange(event.target.value)}
-            className="h-10 min-w-0 rounded-lg border border-slate-200 bg-white/95 px-2.5 text-xs font-semibold text-slate-700 outline-none transition hover:border-slate-300 focus:border-brand focus:shadow-[0_0_0_4px_rgba(192,132,252,0.14)] sm:h-11 sm:rounded-xl sm:px-3 sm:text-sm"
-          >
-            <option value="fast">Fast</option>
-            <option value="standard">Standard</option>
-            <option value="beginner">Beginner</option>
-            <option value="recruiter">Recruiter</option>
-          </select>
-
           <button
             type="submit"
             disabled={isLoading}
@@ -116,18 +115,7 @@ const Navbar = ({
         </form>
       )}
 
-      <button
-        type="button"
-        onClick={toggleTheme}
-        aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-        title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-        className="theme-toggle hidden h-11 items-center justify-between rounded-xl border border-slate-200 bg-white/95 px-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:text-brand lg:ml-auto lg:inline-flex lg:w-auto lg:min-w-32"
-      >
-        <span>{isDark ? 'Light' : 'Dark'}</span>
-        <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-100 text-brand">
-          <ThemeIcon size={16} />
-        </span>
-      </button>
+      <ThemeSwitch isDark={isDark} onToggle={toggleTheme} className="relative hidden lg:ml-auto lg:inline-flex" />
     </div>
   </header>
   );

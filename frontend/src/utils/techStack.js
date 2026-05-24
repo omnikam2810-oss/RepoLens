@@ -34,12 +34,22 @@ const normalizeTechLabel = (value) =>
     .replace(/\s+/g, ' ')
     .toLowerCase();
 
+const looksLikeTechLabel = (value) => {
+  const label = String(value || '').trim();
+  const normalized = normalizeTechLabel(label);
+
+  if (!normalized) return false;
+  if (/[,:;()]/.test(label)) return false;
+  if (normalized.split(' ').length > 4) return false;
+  return true;
+};
+
 export const sanitizeTechStack = (techStack = []) => {
   const seen = new Set();
 
   return techStack.filter((tech) => {
     const normalized = normalizeTechLabel(tech);
-    if (!normalized || packageOnlyLabels.has(normalized) || seen.has(normalized)) return false;
+    if (!looksLikeTechLabel(tech) || packageOnlyLabels.has(normalized) || seen.has(normalized)) return false;
     seen.add(normalized);
     return true;
   });

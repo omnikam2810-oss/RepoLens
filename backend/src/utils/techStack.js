@@ -59,9 +59,19 @@ const normalizeTechLabel = (value) =>
     .replace(/\s+/g, ' ')
     .toLowerCase();
 
+const looksLikeTechLabel = (value) => {
+  const label = String(value || '').trim();
+  const normalized = normalizeTechLabel(label);
+
+  if (!normalized) return false;
+  if (/[,:;()]/.test(label)) return false;
+  if (normalized.split(' ').length > 4) return false;
+  return true;
+};
+
 export const isProductTechnology = (value) => {
   const normalized = normalizeTechLabel(value);
-  if (!normalized) return false;
+  if (!looksLikeTechLabel(value)) return false;
   if (packageOnlyTechnologies.has(normalized)) return false;
   if (packageOnlyLabels.has(normalized)) return false;
   return true;

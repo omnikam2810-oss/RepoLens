@@ -10,15 +10,15 @@ const ThemeSwitch = ({ isDark, onToggle, className = '' }) => (
     aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
     aria-checked={isDark}
     title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-    className={`theme-switch inline-grid h-8 w-[68px] shrink-0 grid-cols-2 items-center rounded-full border p-1 shadow-sm transition hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-slate-200/70 sm:h-9 sm:w-[76px] ${className}`}
+    className={`theme-switch inline-grid h-7 w-[60px] shrink-0 grid-cols-2 place-items-center rounded-full border p-1 shadow-sm transition hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-slate-200/70 sm:h-8 sm:w-[68px] ${className}`}
   >
     <span className="sr-only">{isDark ? 'Dark theme enabled' : 'Light theme enabled'}</span>
-    <span className={`theme-switch-knob absolute left-1 top-1 h-6 w-6 rounded-full transition-transform duration-300 ease-out sm:h-7 sm:w-7 ${isDark ? 'translate-x-[32px] sm:translate-x-[36px]' : 'translate-x-0'}`} />
-    <span className={`theme-switch-slot relative z-10 grid h-6 w-6 place-items-center rounded-full transition-colors sm:h-7 sm:w-7 ${isDark ? 'text-amber-300' : 'theme-switch-active-text'}`}>
-      <Sun size={16} fill="currentColor" strokeWidth={2.4} />
+    <span className={`theme-switch-knob absolute left-1 top-1 h-5 w-5 rounded-full transition-transform duration-300 ease-out sm:h-6 sm:w-6 ${isDark ? 'translate-x-[29px] sm:translate-x-[33px]' : 'translate-x-0'}`} />
+    <span className={`theme-switch-slot relative z-10 grid h-5 w-5 place-items-center rounded-full transition-colors sm:h-6 sm:w-6 ${isDark ? 'text-amber-300' : 'theme-switch-active-text'}`}>
+      <Sun size={14} fill="currentColor" strokeWidth={2.4} />
     </span>
-    <span className={`theme-switch-slot relative z-10 grid h-6 w-6 place-items-center rounded-full transition-colors sm:h-7 sm:w-7 ${isDark ? 'theme-switch-active-text' : 'text-sky-500'}`}>
-      <Moon size={16} fill="currentColor" strokeWidth={2.4} />
+    <span className={`theme-switch-slot relative z-10 grid h-5 w-5 place-items-center rounded-full transition-colors sm:h-6 sm:w-6 ${isDark ? 'theme-switch-active-text' : 'text-sky-500'}`}>
+      <Moon size={14} fill="currentColor" strokeWidth={2.4} />
     </span>
   </button>
 );

@@ -1,4 +1,4 @@
-import { Activity, Boxes, FileCode2, Folder, GitBranch, GitFork, Star } from 'lucide-react';
+import { Activity, ArrowRight, Boxes, FileCode2, Folder, GitBranch, GitFork, Star } from 'lucide-react';
 import { buildFloatingTree } from './SidebarTree';
 import { sanitizeTechStack } from '../utils/techStack';
 
@@ -112,8 +112,7 @@ const StructurePreview = ({ tree = [], repositoryName, disabled = false, onClick
 
 const RightInsights = ({ result, onNavigateStructure }) => {
   const repository = result?.repository;
-  const analysis = result?.analysis;
-  const techStack = sanitizeTechStack(analysis?.techStack?.length ? analysis.techStack : result?.techStack || []);
+  const techStack = sanitizeTechStack(result?.techStack || []);
 
   return (
     <div className="h-full space-y-4 overflow-auto scrollbar-thin sm:space-y-5">
@@ -153,7 +152,18 @@ const RightInsights = ({ result, onNavigateStructure }) => {
         </div>
       </div>
 
-      <StructurePreview tree={result?.tree} repositoryName={repository?.name} disabled={!result} onClick={onNavigateStructure} />
+      <div>
+        <StructurePreview tree={result?.tree} repositoryName={repository?.name} disabled={!result} onClick={onNavigateStructure} />
+        <button
+          type="button"
+          onClick={onNavigateStructure}
+          disabled={!result}
+          className="mt-2 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-line bg-white px-3 text-xs font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:border-line"
+        >
+          View more
+          <ArrowRight size={14} />
+        </button>
+      </div>
     </div>
   );
 };

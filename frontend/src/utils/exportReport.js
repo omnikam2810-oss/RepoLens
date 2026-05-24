@@ -42,7 +42,7 @@ const buildTextReport = (analysisResult) => {
     '',
     'Tech Stack',
     '----------',
-    asList(sanitizeTechStack(analysis.techStack?.length ? analysis.techStack : analysisResult.techStack)),
+    asList(sanitizeTechStack(analysisResult.techStack)),
     '',
     'Features',
     '--------',

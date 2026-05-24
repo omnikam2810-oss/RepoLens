@@ -6,7 +6,7 @@ import { fetchRepositorySnapshot } from './github.service.js';
 import { generateRepositoryAnalysis } from './geminiService.js';
 
 const analysisCache = new Map();
-const ANALYSIS_CACHE_VERSION = 'tech-stack-v2';
+const ANALYSIS_CACHE_VERSION = 'tech-stack-v3';
 
 const getCacheKey = ({ owner, repo, mode }) =>
   `${ANALYSIS_CACHE_VERSION}:${owner.toLowerCase()}/${repo.toLowerCase()}:${mode || 'standard'}`;
@@ -69,9 +69,7 @@ export const analyzeRepository = async ({ owner, repo, normalizedUrl, mode = 'st
   );
   const sanitizedAnalysis = {
     ...analysis,
-    techStack: sanitizeTechStack(
-      Array.isArray(analysis.techStack) && analysis.techStack.length ? analysis.techStack : technologyProfile.techStack,
-    ),
+    techStack: sanitizeTechStack(technologyProfile.techStack),
   };
 
   const result = {

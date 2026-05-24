@@ -26,6 +26,17 @@ const packageOnlyLabels = new Set([
   'zod',
 ]);
 
+const languageOnlyLabels = new Set([
+  'javascript',
+  'typescript',
+  'python',
+  'java',
+  'go',
+  'rust',
+  'php',
+  'ruby',
+]);
+
 const normalizeTechLabel = (value) =>
   String(value || '')
     .trim()
@@ -49,7 +60,7 @@ export const sanitizeTechStack = (techStack = []) => {
 
   return techStack.filter((tech) => {
     const normalized = normalizeTechLabel(tech);
-    if (!looksLikeTechLabel(tech) || packageOnlyLabels.has(normalized) || seen.has(normalized)) return false;
+    if (!looksLikeTechLabel(tech) || languageOnlyLabels.has(normalized) || packageOnlyLabels.has(normalized) || seen.has(normalized)) return false;
     seen.add(normalized);
     return true;
   });

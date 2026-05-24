@@ -51,6 +51,17 @@ const packageOnlyLabels = new Set([
   'zod',
 ]);
 
+const languageOnlyLabels = new Set([
+  'javascript',
+  'typescript',
+  'python',
+  'java',
+  'go',
+  'rust',
+  'php',
+  'ruby',
+]);
+
 const normalizeTechLabel = (value) =>
   String(value || '')
     .trim()
@@ -72,6 +83,7 @@ const looksLikeTechLabel = (value) => {
 export const isProductTechnology = (value) => {
   const normalized = normalizeTechLabel(value);
   if (!looksLikeTechLabel(value)) return false;
+  if (languageOnlyLabels.has(normalized)) return false;
   if (packageOnlyTechnologies.has(normalized)) return false;
   if (packageOnlyLabels.has(normalized)) return false;
   return true;

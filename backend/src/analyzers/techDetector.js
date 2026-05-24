@@ -18,7 +18,6 @@ const dependencySignals = {
   mongodb: 'MongoDB',
   tailwindcss: 'Tailwind CSS',
   '@tailwindcss/vite': 'Tailwind CSS',
-  typescript: 'TypeScript',
   jest: 'Jest',
   vitest: 'Vitest',
   prisma: 'Prisma',
@@ -44,23 +43,9 @@ const dependencySignals = {
   pymongo: 'MongoDB',
 };
 
-const languageSignals = {
-  JavaScript: 'JavaScript',
-  TypeScript: 'TypeScript',
-  Python: 'Python',
-  Java: 'Java',
-  Go: 'Go',
-  Rust: 'Rust',
-  PHP: 'PHP',
-  Ruby: 'Ruby',
-};
-
-export const detectTechnologies = ({ files, tree, repository }) => {
+export const detectTechnologies = ({ files, tree }) => {
   const detected = new Set();
   const dependencyInsights = [];
-
-  const primaryLanguage = languageSignals[repository?.language];
-  if (primaryLanguage) detected.add(primaryLanguage);
 
   for (const file of files) {
     const name = file.path.split('/').pop();
@@ -84,7 +69,6 @@ export const detectTechnologies = ({ files, tree, repository }) => {
     }
 
     if (name === 'requirements.txt') {
-      detected.add('Python');
       const dependencies = parseRequirementsTxt(file.content);
       dependencies.forEach((dependency) => {
         const signal = dependencySignals[dependency.toLowerCase()];
@@ -99,10 +83,6 @@ export const detectTechnologies = ({ files, tree, repository }) => {
 
   const paths = tree.map((item) => item.path);
   if (paths.some((path) => path.endsWith('package.json'))) detected.add('Node.js');
-  if (paths.some((path) => path.endsWith('.tsx') || path.endsWith('.ts'))) detected.add('TypeScript');
-  if (paths.some((path) => path.endsWith('.jsx') || path.endsWith('.js'))) detected.add('JavaScript');
-  if (paths.some((path) => path.endsWith('.py'))) detected.add('Python');
-  if (paths.some((path) => path.endsWith('.java'))) detected.add('Java');
   if (paths.some((path) => /(^|\/)tailwind\.config\.(js|ts|cjs|mjs)$/.test(path))) detected.add('Tailwind CSS');
   if (paths.some((path) => /(^|\/)vite\.config\.(js|ts|mjs)$/.test(path))) detected.add('Vite');
   if (paths.some((path) => /(^|\/)next\.config\.(js|mjs|ts)$/.test(path))) detected.add('Next.js');

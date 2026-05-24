@@ -50,6 +50,7 @@ export const analyzeRepository = async ({ owner, repo, normalizedUrl, mode = 'st
   const technologyProfile = detectTechnologies({
     files: snapshot.importantFiles,
     tree: snapshot.tree,
+    repository: snapshot.repository,
   });
 
   const prompt = buildAnalysisPrompt({

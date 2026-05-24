@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Boxes, FileCode2, Folder, GitFork, GitBranch, Star } from 'lucide-react';
+import { Activity, Boxes, FileCode2, Folder, GitFork, Star } from 'lucide-react';
 import { buildFloatingTree } from './SidebarTree';
 import { sanitizeTechStack } from '../utils/techStack';
 
@@ -20,11 +20,18 @@ const flattenPreviewTree = (nodes, depth = 0, rows = []) => {
   return rows;
 };
 
-const StructurePreview = ({ tree = [] }) => {
+const StructurePreview = ({ tree = [], disabled = false, onClick }) => {
   const rows = flattenPreviewTree(buildFloatingTree(tree, 32).slice(0, 4));
 
   return (
-    <div className="mt-3 rounded-xl border border-line bg-slate-50/80 p-2.5">
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label="Open project structure"
+      title="Open project structure"
+      className="surface-card card-glow block w-full rounded-xl p-2.5 text-left transition hover:-translate-y-0.5 hover:border-brand hover:shadow-[0_22px_52px_rgba(15,23,42,0.12)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:border-line sm:rounded-2xl sm:p-3"
+    >
       <div className="space-y-1.5">
         {rows.map(({ node, depth }) => {
           const isDirectory = node.type === 'directory';
@@ -43,7 +50,7 @@ const StructurePreview = ({ tree = [] }) => {
         })}
         {!rows.length && <p className="px-2 py-3 text-xs font-semibold text-slate-400">Analyze a repository to preview its tree.</p>}
       </div>
-    </div>
+    </button>
   );
 };
 
@@ -90,29 +97,7 @@ const RightInsights = ({ result, onNavigateStructure }) => {
         </div>
       </div>
 
-      <div className="surface-card card-glow rounded-xl p-4 sm:rounded-2xl sm:p-5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-sm font-extrabold text-ink">Project Structure</p>
-            <p className="mt-1 text-xs font-semibold text-slate-500">Compact repository tree preview</p>
-          </div>
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-violet-50 text-brand">
-            <GitBranch size={18} />
-          </span>
-        </div>
-
-        <StructurePreview tree={result?.tree} />
-
-        <button
-          type="button"
-          onClick={onNavigateStructure}
-          disabled={!result}
-          className="mt-3 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-line bg-white px-3 text-xs font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-brand hover:text-brand hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:border-line"
-        >
-          View more
-          <ArrowRight size={14} />
-        </button>
-      </div>
+      <StructurePreview tree={result?.tree} disabled={!result} onClick={onNavigateStructure} />
     </div>
   );
 };

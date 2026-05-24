@@ -8,7 +8,6 @@ import {
   FileCode2,
   Folder,
   GitBranch,
-  ListTree,
   Network,
 } from 'lucide-react';
 import { buildFloatingTree } from '../components/SidebarTree';
@@ -22,7 +21,6 @@ const sortedChildren = (node) => [...node.children.values()].sort((a, b) => {
 const structureModes = [
   { id: 'map', label: 'Tree Map', icon: Network },
   { id: 'explorer', label: 'Clickable Explorer', icon: Folder },
-  { id: 'simple', label: 'Simple Structure', icon: ListTree },
   { id: 'important', label: 'Important Files', icon: FileCode2 },
 ];
 
@@ -32,14 +30,6 @@ const getFileTone = (name) => {
   if (name.endsWith('.css')) return 'text-pink-500';
   if (name.endsWith('.js') || name.endsWith('.jsx') || name.endsWith('.ts') || name.endsWith('.tsx')) return 'text-brand';
   return 'text-slate-500';
-};
-
-const flattenTree = (nodes, depth = 0, rows = []) => {
-  nodes.forEach((node) => {
-    rows.push({ node, depth });
-    if (node.children.size > 0) flattenTree(sortedChildren(node), depth + 1, rows);
-  });
-  return rows;
 };
 
 const createMapLayout = (tree) => {
@@ -99,37 +89,6 @@ const createMapLayout = (tree) => {
   const canvasHeight = Math.max(620, 240 + rowCount * 250);
 
   return { root, groupNodes, childNodes, links, canvasWidth, canvasHeight };
-};
-
-const SimpleStructureView = ({ tree }) => {
-  const rows = flattenTree(buildFloatingTree(tree, 220));
-
-  return (
-    <div className="surface-card overflow-hidden rounded-2xl">
-      <div className="border-b border-line bg-slate-50 px-4 py-3">
-        <p className="text-sm font-extrabold text-ink">Simple Structure</p>
-      </div>
-      <div className="max-h-[720px] overflow-auto font-mono text-sm">
-        {rows.map(({ node, depth }, index) => {
-          const isDirectory = node.type === 'directory';
-          const Icon = isDirectory ? Folder : FileCode2;
-
-          return (
-            <div key={node.path} className="grid grid-cols-[64px_minmax(0,1fr)] border-b border-slate-100 transition hover:bg-violet-50/50 last:border-b-0">
-              <div className="bg-slate-50 px-4 py-2 text-right text-slate-400">{index + 1}</div>
-              <div className="flex min-w-0 items-center gap-2 px-4 py-2 text-slate-700">
-                <span className="text-slate-400" style={{ width: `${depth * 28}px` }} />
-                {depth > 0 && <span className="h-px w-5 shrink-0 bg-slate-300" />}
-                <Icon size={18} className={isDirectory ? 'text-violet-400' : getFileTone(node.name)} />
-                <span className={`truncate ${isDirectory ? 'font-extrabold text-ink' : ''}`}>{node.name}</span>
-              </div>
-            </div>
-          );
-        })}
-        {!rows.length && <p className="p-5 text-sm text-slate-400">Analyze a repository to see its structure.</p>}
-      </div>
-    </div>
-  );
 };
 
 const Connector = ({ link, index }) => {
@@ -394,7 +353,7 @@ const ProjectStructurePage = ({ result, onBack }) => {
               <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-brand">Top 220 paths</span>
             )}
           </div>
-          <div className="mb-4 grid grid-cols-2 gap-2 sm:mb-5 md:grid-cols-4">
+          <div className="mb-4 grid grid-cols-1 gap-2 sm:mb-5 sm:grid-cols-3">
             {structureModes.map((mode) => {
               const Icon = mode.icon;
               return (
@@ -415,7 +374,6 @@ const ProjectStructurePage = ({ result, onBack }) => {
             })}
           </div>
 
-          {activeMode === 'simple' && <SimpleStructureView tree={tree} />}
           {activeMode === 'map' && <TreeMapView tree={tree} repositoryName={repository?.name} />}
           {activeMode === 'explorer' && <ClickableExplorerView tree={tree} repositoryName={repository?.name} />}
           {activeMode === 'important' && <ImportantFilesView importantFiles={importantFiles} />}

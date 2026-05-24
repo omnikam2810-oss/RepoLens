@@ -22,6 +22,10 @@ const AnalyzerPage = () => {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [currentView]);
+
   const handleAnalyze = async (event) => {
     event.preventDefault();
     if (!repositoryUrl.trim()) {
